@@ -41,5 +41,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>this app is using location  to get the closest stop</string>
+	<key>NSLocationUsageDescription</key>
+	<string>this app is using location  to get the closest stop</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>this app is using location  to get the closest stop</string>
 </dict>
 </plist>
