@@ -16,42 +16,17 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     @IBOutlet var table: WKInterfaceTable!
     var busesData = [BusInfo]()
     var locationManager = CLLocationManager()
-    var data = [String:Any]()
+    //var data = [String:Any]()
     var session: WCSession!
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         // Configure interface objects here.
-        self.session = WCSession.default
-        self.session.delegate = self
-        self.session.activate()
-        //get user location
-
-        /*if activationState == .activated{
-            DispatchQueue.main.async {
-                //first get closest stops' name
-                DataService.instance.getStopName(handler: { closest in
-                    
-                    //then get its stop number
-                    DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
-                        
-                        //after that get bus infos from that stop
-                        DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
-                            self.busesData = data
-                            print(self.busesData)
-                            //finally load table with buses data
-                            self.table.setNumberOfRows(self.busesData.count, withRowType: "myRow")
-                            for i in 0..<self.busesData.count{
-                                let row = self.table.rowController(at: i) as! rowController
-                                row.initRow(busInfo: self.busesData[i])
-                            }
-                            
-                        })
-                    })
-                })
-            } //end dispatch.main.async
-      //  } //end if*/
-        
+        DispatchQueue.main.async {
+            self.session = WCSession.default
+            self.session.delegate = self
+            self.session.activate()
+        }
         
     }
     
@@ -71,7 +46,30 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        print(message)
+        
+        DispatchQueue.main.async {
+            print(message)
+            //first get closest stops' name
+            DataService.instance.getStopName(handler: { closest in
+                
+                //then get its stop number
+                DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
+                    
+                    //after that get bus infos from that stop
+                    DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
+                        self.busesData = data
+                        //finally load table with buses data
+                        self.table.setNumberOfRows(self.busesData.count, withRowType: "myRow")
+                        for i in 0..<self.busesData.count{
+                            let row = self.table.rowController(at: i) as! rowController
+                            row.initRow(busInfo: self.busesData[i])
+                        }
+                        
+                    })
+                })
+            })
+        } //end dispatch.main.async
+        
     }
     
     
