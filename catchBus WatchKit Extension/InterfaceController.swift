@@ -22,31 +22,35 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         // Configure interface objects here.
-        
+        self.session = WCSession.default
+        self.session.delegate = self
+        self.session.activate()
         //get user location
 
-        
-        //first get closest stops' name
-        DataService.instance.getStopName(handler: { closest in
-            
-            //then get its stop number
-            DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
-                
-                //after that get bus infos from that stop
-                DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
-                    self.busesData = data
-    
-                    //finally load table with buses data
-                    self.table.setNumberOfRows(self.busesData.count, withRowType: "myRow")
-                    for i in 0..<self.busesData.count{
-                        let row = self.table.rowController(at: i) as! rowController
-                        row.initRow(busInfo: self.busesData[i])
-                    }
+        /*if activationState == .activated{
+            DispatchQueue.main.async {
+                //first get closest stops' name
+                DataService.instance.getStopName(handler: { closest in
                     
+                    //then get its stop number
+                    DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
+                        
+                        //after that get bus infos from that stop
+                        DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
+                            self.busesData = data
+                            print(self.busesData)
+                            //finally load table with buses data
+                            self.table.setNumberOfRows(self.busesData.count, withRowType: "myRow")
+                            for i in 0..<self.busesData.count{
+                                let row = self.table.rowController(at: i) as! rowController
+                                row.initRow(busInfo: self.busesData[i])
+                            }
+                            
+                        })
+                    })
                 })
-            })
-        })
-        
+            } //end dispatch.main.async
+      //  } //end if*/
         
         
     }
@@ -54,19 +58,6 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
-        
-        self.session = WCSession.default
-        self.session.delegate = self
-        self.session.activate()
-        
-        //notify iphone that i am about to be awake
-        session.sendMessage(["status":"OK"], replyHandler: { reply in
-            //then get user coordinates from the iphone
-            print(reply)
-            
-        }, errorHandler: { error in
-            print(error)
-        })
     }
     
     
@@ -78,6 +69,13 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         
     }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        print(message)
+    }
+    
+    
+    
     
     
     

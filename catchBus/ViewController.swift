@@ -28,12 +28,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         }
         
         //set up location service
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
-        print("-----------test-----------")
+        DispatchQueue.main.async {
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            self.locationManager.requestWhenInUseAuthorization()
+            self.locationManager.delegate = self
+            self.locationManager.startUpdatingLocation()
+        }
         
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,11 +44,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        
+        self.session = WCSession.default
     }
     
     func sessionDidBecomeInactive(_ session: WCSession) {
-        
+        self.session.activate()
     }
     
     func sessionDidDeactivate(_ session: WCSession) {
@@ -54,22 +56,21 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        self.userCoordinates = locations[0].coordinate
-        //print(locations[0])
-    }
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
         
-        if let status = message["status"] as? String{
-            if status == "OK"{
-                let latitude = String(self.userCoordinates.latitude)
-                let longitude = String(self.userCoordinates.longitude)
-                let location  = ["lat": latitude, "long": longitude]
-                replyHandler(location)
-            }
+        DispatchQueue.main.async {
+            self.userCoordinates = locations[0].coordinate
+            let latitude = String(self.userCoordinates!.latitude)
+            let longitude = String(self.userCoordinates!.longitude)
+            let location  = ["lat": latitude, "long": longitude]
+            
+            //sending location to apple watch
+            self.session.sendMessage(location, replyHandler: nil, errorHandler: { error in
+                print(error.localizedDescription)
+            })
         }
         
     }
+    
 
 }
 
