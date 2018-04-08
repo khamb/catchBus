@@ -18,7 +18,8 @@ class busInfoCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         self.layer.borderWidth = 2
-        self.layer.borderColor = UIColor.red.cgColor
+        self.layer.borderColor = UIColor(red: 208, green: 2, blue: 27, alpha: 0).cgColor
+        
     }
     
     func initRow(busInfo: BusInfo){
