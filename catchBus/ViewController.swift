@@ -10,7 +10,12 @@ import UIKit
 import CoreLocation
 import WatchConnectivity
 
-class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDelegate, UITableViewDelegate, UITableViewDataSource {
+ 
+    
+    
+    @IBOutlet weak var busesTable: UITableView!
+    var busesData = [BusInfo]()
     
     var locationManager = CLLocationManager()
     var session: WCSession!
@@ -19,6 +24,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        self.busesTable.dataSource = self
+        self.busesTable.delegate = self
         
         //activate watch connectivity if the device support it
         if (WCSession.isSupported()) {
@@ -33,6 +40,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
             self.locationManager.requestWhenInUseAuthorization()
             self.locationManager.delegate = self
             self.locationManager.startUpdatingLocation()
+            
+            self.loadTable()
         }
         
 
@@ -41,6 +50,24 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func loadTable(){
+        //first get closest stops' name
+        DataService.instance.getStopName(handler: { closest in
+            
+            //then get its stop number
+            DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
+                
+                //after that get bus infos from that stop
+                DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
+                    self.busesData = data
+                    //finally load table with buses data
+                    self.busesTable.reloadData()
+                    
+                })
+            })
+        })
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
@@ -71,7 +98,25 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.busesData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = self.busesTable.dequeueReusableCell(withIdentifier: "busInfoCell") as? busInfoCell{
+            cell.initRow(busInfo: self.busesData[indexPath.row])
+            return cell
+        }
+        
+        return busInfoCell()
+    }
 
+
+    
 }
 
 

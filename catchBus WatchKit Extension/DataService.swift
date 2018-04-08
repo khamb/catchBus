@@ -14,12 +14,11 @@ import SwiftyJSON
 class DataService{
     static let instance = DataService()
     
-    var buses = [BusInfo]()
-
-    
     /* function to get all buses infos around
      */
     func getBusInfos(stopCode: String, handler: @escaping (_ busInfo: [BusInfo]) -> ()){
+        var buses = [BusInfo]()
+        
         // 45.414535,-75.671526
         let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStopAllRoutes?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&stopNo="+stopCode+"&format=json"
 
@@ -46,13 +45,13 @@ class DataService{
                         break
                     }
                     bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time ?? "-")
-                    self.buses.append(bInfo)
+                    buses.append(bInfo)
                 }
                 
             } else {
                 print(response.result.error.debugDescription)
             }
-            handler(self.buses)
+            handler(buses)
         }// end of API call
         
     }
