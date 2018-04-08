@@ -17,6 +17,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     @IBOutlet weak var busesTable: UITableView!
     var busesData = [BusInfo]()
     var tableRefresher:UIRefreshControl = UIRefreshControl()
+    let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 70, height: 20))
     
     var locationManager = CLLocationManager()
     var session: WCSession!
@@ -27,6 +28,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         // Do any additional setup after loading the view, typically from a nib.
         self.busesTable.dataSource = self
         self.busesTable.delegate = self
+        
+        //init navigation bar
+        navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon"))
+        let locIconImageView = UIImageView(image: UIImage(named: "locIcon"))
+        rightLabel.textColor = UIColor.white
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: rightLabel), UIBarButtonItem(customView: locIconImageView)]
         
         self.initTableRefresher()
 
@@ -68,24 +75,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
             
             //then get its stop number
             DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
-                
+                self.rightLabel.text = closest
                 //after that get bus infos from that stop
                 DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
                     self.busesData = data
-                    //finally load table with buses data
+                    
+                    //filter buses out of service
                     self.busesData = self.busesData.filter({bus in
                             return bus.time != "-"
                     })
                     
+                    //sort by ascending arrival time
                     self.busesData.sort(by: {(bus1, bus2) in
                         return Int(bus1.time)! < Int(bus2.time)!
                     })
                     
+                    //finally load table with buses data
                     self.busesTable.reloadData()
                     
                 })
             })
         })
+        
         self.tableRefresher.endRefreshing()
     }
     

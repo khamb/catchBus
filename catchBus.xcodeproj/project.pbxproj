@@ -30,6 +30,7 @@
 		F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
 		F8F231AF2079CFD000082636 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
 		F8F231B02079CFD400082636 /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F8859683206F32CF005F0B15 /* stops.json */; };
+		F8F231B22079DB7A00082636 /* icons8-location_filled.png in Resources */ = {isa = PBXBuildFile; fileRef = F8F231B12079DB7A00082636 /* icons8-location_filled.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		F8C8E287206B26A100520784 /* BusInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusInfo.swift; sourceTree = "<group>"; };
 		F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F8F231AC2079CCA800082636 /* busInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = busInfoCell.swift; sourceTree = "<group>"; };
+		F8F231B12079DB7A00082636 /* icons8-location_filled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icons8-location_filled.png"; path = "../../../com.visualpharm.Icons8/ios/Maps/25/ffffff/icons8-location_filled.png"; sourceTree = "<group>"; };
 		F994D50585B094FACC7787A6 /* Pods_catchBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_catchBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -173,6 +175,7 @@
 				F8F231AC2079CCA800082636 /* busInfoCell.swift */,
 				F83BE22F2068626A009B4F9D /* Main.storyboard */,
 				F83BE2322068626A009B4F9D /* Assets.xcassets */,
+				F8F231B12079DB7A00082636 /* icons8-location_filled.png */,
 				F83BE2342068626A009B4F9D /* LaunchScreen.storyboard */,
 				F83BE2372068626A009B4F9D /* Info.plist */,
 			);
@@ -327,6 +330,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8F231B22079DB7A00082636 /* icons8-location_filled.png in Resources */,
 				F83BE2362068626A009B4F9D /* LaunchScreen.storyboard in Resources */,
 				F83BE2332068626A009B4F9D /* Assets.xcassets in Resources */,
 				F83BE2312068626A009B4F9D /* Main.storyboard in Resources */,
