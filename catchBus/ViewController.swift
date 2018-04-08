@@ -16,6 +16,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     
     @IBOutlet weak var busesTable: UITableView!
     var busesData = [BusInfo]()
+    var tableRefresher:UIRefreshControl = UIRefreshControl()
     
     var locationManager = CLLocationManager()
     var session: WCSession!
@@ -27,6 +28,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         self.busesTable.dataSource = self
         self.busesTable.delegate = self
         
+        self.initTableRefresher()
+
         //activate watch connectivity if the device support it
         if (WCSession.isSupported()) {
             self.session = WCSession.default
@@ -52,7 +55,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         // Dispose of any resources that can be recreated.
     }
     
-    func loadTable(){
+    func initTableRefresher(){
+        self.busesTable.refreshControl = self.tableRefresher
+        self.tableRefresher.addTarget(self, action: #selector(ViewController.self.loadTable), for: UIControlEvents.valueChanged)
+        self.tableRefresher.attributedTitle = NSAttributedString(string: "updating bus informations ...")
+    }
+    
+    @objc func loadTable(){
+        
         //first get closest stops' name
         DataService.instance.getStopName(handler: { closest in
             
@@ -63,11 +73,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
                 DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
                     self.busesData = data
                     //finally load table with buses data
+                    self.busesData = self.busesData.filter({bus in
+                            return bus.time != "-"
+                    })
+                    
+                    self.busesData.sort(by: {(bus1, bus2) in
+                        return Int(bus1.time)! < Int(bus2.time)!
+                    })
+                    
                     self.busesTable.reloadData()
                     
                 })
             })
         })
+        self.tableRefresher.endRefreshing()
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
