@@ -35,25 +35,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         rightLabel.textColor = UIColor.white
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: rightLabel), UIBarButtonItem(customView: locIconImageView)]
         
-        self.initTableRefresher()
-
-        //activate watch connectivity if the device support it
-        if (WCSession.isSupported()) {
-            self.session = WCSession.default
-            self.session.delegate = self
-            self.session.activate()
-        }
         
-        //set up location service
+        
+        
         DispatchQueue.main.async {
+            //activate watch connectivity if the device support it
+            if (WCSession.isSupported()) {
+                self.session = WCSession.default
+                self.session.delegate = self
+                self.session.activate()
+            }
+            
+            //set up location service
             self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
             self.locationManager.requestWhenInUseAuthorization()
             self.locationManager.delegate = self
             self.locationManager.startUpdatingLocation()
-            
+            self.userCoordinates = self.locationManager.location?.coordinate
+
             self.loadTable()
         }
         
+        self.initTableRefresher()
 
     }
 
@@ -66,12 +69,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         self.busesTable.refreshControl = self.tableRefresher
         self.tableRefresher.addTarget(self, action: #selector(ViewController.self.loadTable), for: UIControlEvents.valueChanged)
         self.tableRefresher.attributedTitle = NSAttributedString(string: "updating bus informations ...")
+
     }
     
     @objc func loadTable(){
         
         //first get closest stops' name
         DataService.instance.getStopName(handler: { closest in
+            
+            self.session.sendMessage(["loc": self.userCoordinates], replyHandler: nil, errorHandler: nil)
             
             //then get its stop number
             DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
@@ -101,7 +107,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        self.session = WCSession.default
+        if error != nil{
+            print(error?.localizedDescription)
+        }
     }
     
     func sessionDidBecomeInactive(_ session: WCSession) {
@@ -109,23 +117,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     }
     
     func sessionDidDeactivate(_ session: WCSession) {
-        
+        self.session.activate()
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+       
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        DispatchQueue.main.async {
             self.userCoordinates = locations[0].coordinate
-            let latitude = String(self.userCoordinates!.latitude)
-            let longitude = String(self.userCoordinates!.longitude)
-            let location  = ["lat": latitude, "long": longitude]
-            
-            //sending location to apple watch
-            self.session.sendMessage(location, replyHandler: nil, errorHandler: { error in
-                print(error.localizedDescription)
-            })
-        }
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -144,7 +144,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         
         return busInfoCell()
     }
-
 
     
 }

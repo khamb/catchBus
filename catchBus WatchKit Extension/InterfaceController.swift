@@ -17,16 +17,20 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     var busesData = [BusInfo]()
     var locationManager = CLLocationManager()
     //var data = [String:Any]()
-    var session: WCSession!
+    var session: WCSession = WCSession.default
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         // Configure interface objects here.
+       
+        self.session = WCSession.default
+        self.session.delegate = self
+        self.session.activate()
+        
         DispatchQueue.main.async {
-            self.session = WCSession.default
-            self.session.delegate = self
-            self.session.activate()
+            self.loadTable()
         }
+        
         
     }
     
@@ -42,40 +46,50 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        
+    
     }
     
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        
-        DispatchQueue.main.async {
-            print(message)
-            //first get closest stops' name
-            DataService.instance.getStopName(handler: { closest in
-                
-                //then get its stop number
-                DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        print(self.session.isReachable)
+    }
+  
+    
+    func loadTable(){
+            
+        //first get closest stops' name
+        DataService.instance.getStopName(handler: { closest in
+            
+            //then get its stop number
+            DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
+
+                //after that get bus infos from that stop
+                DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
+                    self.busesData = data
                     
-                    //after that get bus infos from that stop
-                    DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
-                        self.busesData = data
-                        //finally load table with buses data
-                        self.table.setNumberOfRows(self.busesData.count, withRowType: "myRow")
-                        for i in 0..<self.busesData.count{
-                            let row = self.table.rowController(at: i) as! rowController
+                    //filter buses out of service
+                    self.busesData = self.busesData.filter({bus in
+                        return bus.time != "-"
+                    })
+                    
+                    //sort by ascending arrival time
+                    self.busesData.sort(by: {(bus1, bus2) in
+                        return Int(bus1.time)! < Int(bus2.time)!
+                    })
+                    
+                    //finally load table with buses data
+                    self.table.setNumberOfRows(self.busesData.count, withRowType: "myRow")
+
+                    for i in 0..<self.busesData.count{
+                        // Set the values for the row controller
+                        if let row = self.table.rowController(at: i) as? rowController{
                             row.initRow(busInfo: self.busesData[i])
                         }
-                        
-                    })
+                    }//end of loading table
                 })
             })
-        } //end dispatch.main.async
+        })
         
     }
-    
-    
-    
-    
-    
     
 
 }
