@@ -57,7 +57,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     func loadTable(){
             
         //first get closest stops' name
-        DataService.instance.getStopName(handler: { closest in
+        DataService.instance.getStopName(location: "45.414535,-75.671526", handler: { closest in
             
             //then get its stop number
             DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in

@@ -22,14 +22,14 @@
 		F83BE24A2068626B009B4F9D /* catchBus WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F83BE2492068626B009B4F9D /* catchBus WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F83BE2512068626B009B4F9D /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83BE2502068626B009B4F9D /* ExtensionDelegate.swift */; };
 		F83BE2552068626B009B4F9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F83BE2542068626B009B4F9D /* Assets.xcassets */; };
-		F8859684206F32D0005F0B15 /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F8859683206F32CF005F0B15 /* stops.json */; };
+		F83DB98F20802A8D0039E05D /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F83DB98E20802A8C0039E05D /* stops.json */; };
+		F83DB99020802A8D0039E05D /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F83DB98E20802A8C0039E05D /* stops.json */; };
 		F89CFD94206DC4A600B9ACC8 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
 		F8C8E28B206C405900520784 /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
 		F8E5CB4B206ECAFE007E5820 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */; };
 		F8F231AD2079CCA800082636 /* busInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F231AC2079CCA800082636 /* busInfoCell.swift */; };
 		F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
 		F8F231AF2079CFD000082636 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
-		F8F231B02079CFD400082636 /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F8859683206F32CF005F0B15 /* stops.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,7 +97,7 @@
 		F83BE2502068626B009B4F9D /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		F83BE2542068626B009B4F9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F83BE2562068626B009B4F9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F8859683206F32CF005F0B15 /* stops.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = stops.json; path = ../../../../Desktop/stops.json; sourceTree = "<group>"; };
+		F83DB98E20802A8C0039E05D /* stops.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = stops.json; path = ../../../../Desktop/stops.json; sourceTree = "<group>"; };
 		F89CFD93206DC4A600B9ACC8 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		F8C8E287206B26A100520784 /* BusInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusInfo.swift; sourceTree = "<group>"; };
 		F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -193,7 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				F83BE24E2068626B009B4F9D /* InterfaceController.swift */,
-				F8859683206F32CF005F0B15 /* stops.json */,
+				F83DB98E20802A8C0039E05D /* stops.json */,
 				F83BE2502068626B009B4F9D /* ExtensionDelegate.swift */,
 				F8C8E287206B26A100520784 /* BusInfo.swift */,
 				F83BE2542068626B009B4F9D /* Assets.xcassets */,
@@ -330,7 +330,7 @@
 				F83BE2362068626A009B4F9D /* LaunchScreen.storyboard in Resources */,
 				F83BE2332068626A009B4F9D /* Assets.xcassets in Resources */,
 				F83BE2312068626A009B4F9D /* Main.storyboard in Resources */,
-				F8F231B02079CFD400082636 /* stops.json in Resources */,
+				F83DB98F20802A8D0039E05D /* stops.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,7 +348,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F83BE2552068626B009B4F9D /* Assets.xcassets in Resources */,
-				F8859684206F32D0005F0B15 /* stops.json in Resources */,
+				F83DB99020802A8D0039E05D /* stops.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,6 +648,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7XS83WMSPL;
 				INFOPLIST_FILE = "catchBus WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus.watchkitapp.watchkitextension";
@@ -666,6 +667,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7XS83WMSPL;
 				INFOPLIST_FILE = "catchBus WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus.watchkitapp.watchkitextension";
@@ -684,6 +686,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7XS83WMSPL;
 				IBSC_MODULE = catchBus_WatchKit_Extension;
 				INFOPLIST_FILE = "catchBus WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus.watchkitapp";
@@ -702,6 +705,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7XS83WMSPL;
 				IBSC_MODULE = catchBus_WatchKit_Extension;
 				INFOPLIST_FILE = "catchBus WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus.watchkitapp";
@@ -720,6 +724,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7XS83WMSPL;
 				INFOPLIST_FILE = catchBus/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus";
@@ -735,6 +740,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7XS83WMSPL;
 				INFOPLIST_FILE = catchBus/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus";

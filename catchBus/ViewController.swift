@@ -74,10 +74,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     
     @objc func loadTable(){
         
+        let latitude = String(self.userCoordinates.latitude)
+        let longitude = String(self.userCoordinates.longitude)
+        let userLocation = latitude+","+longitude
+        print(userLocation)
+        
         //first get closest stops' name
-        DataService.instance.getStopName(handler: { closest in
-            
-            self.session.sendMessage(["loc": self.userCoordinates], replyHandler: nil, errorHandler: nil)
+        DataService.instance.getStopName(location: userLocation, handler: { closest in
             
             //then get its stop number
             DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
@@ -107,9 +110,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        if error != nil{
-            print(error?.localizedDescription)
-        }
     }
     
     func sessionDidBecomeInactive(_ session: WCSession) {

@@ -53,8 +53,8 @@ class DataService{
             }
             handler(buses)
         }// end of API call
-        
     }
+    
     
     /*get stop number from json file
      */
@@ -82,9 +82,9 @@ class DataService{
     
     /* Function to get name of the stop near by
      */
-    func getStopName(handler: @escaping (_ stopNumber: String) -> ()){
+    func getStopName(location: String, handler: @escaping (_ stopNumber: String) -> ()){
        
-        let location = "45.414535,-75.671526"
+        //let location = "45.414535,-75.671526"
         let API_KEY = "AIzaSyBmG3KTRGPdOgzuBqw_CUYlNbgLyV81xsM"
         let url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+location+"&radius=100&type=bus_station&key="+API_KEY
         
