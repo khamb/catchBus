@@ -21,6 +21,13 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="glM-LO-A1H">
                                 <rect key="frame" x="0.0" y="64" width="375" height="352"/>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QGR-Hc-mUO">
+                                <rect key="frame" x="317" y="357" width="50" height="50"/>
+                                <state key="normal" image="center"/>
+                                <connections>
+                                    <action selector="centerBtnPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sDK-RV-etW"/>
+                                </connections>
+                            </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cDM-g1-woW">
                                 <rect key="frame" x="0.0" y="424" width="375" height="243"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -102,6 +109,8 @@
                             <constraint firstItem="glM-LO-A1H" firstAttribute="leading" secondItem="Uee-0j-aNJ" secondAttribute="leading" id="7IB-o7-f3U"/>
                             <constraint firstItem="glM-LO-A1H" firstAttribute="trailing" secondItem="Uee-0j-aNJ" secondAttribute="trailing" id="As0-LK-4X4"/>
                             <constraint firstAttribute="bottom" secondItem="glM-LO-A1H" secondAttribute="bottom" constant="251" id="Jpz-II-kOG"/>
+                            <constraint firstItem="Uee-0j-aNJ" firstAttribute="trailing" secondItem="QGR-Hc-mUO" secondAttribute="trailing" constant="8" id="O6U-ae-rTy"/>
+                            <constraint firstItem="QGR-Hc-mUO" firstAttribute="top" secondItem="Uee-0j-aNJ" secondAttribute="top" constant="293" id="Rnv-rE-iLU"/>
                             <constraint firstItem="glM-LO-A1H" firstAttribute="top" secondItem="Uee-0j-aNJ" secondAttribute="top" id="syf-yi-mXa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Uee-0j-aNJ"/>
@@ -138,5 +147,6 @@
     </scenes>
     <resources>
         <image name="bus" width="25" height="25"/>
+        <image name="center" width="50" height="50"/>
     </resources>
 </document>

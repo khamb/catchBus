@@ -24,7 +24,6 @@
 		F83BE2552068626B009B4F9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F83BE2542068626B009B4F9D /* Assets.xcassets */; };
 		F83DB98F20802A8D0039E05D /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F83DB98E20802A8C0039E05D /* stops.json */; };
 		F83DB99020802A8D0039E05D /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F83DB98E20802A8C0039E05D /* stops.json */; };
-		F87349EE208C1A4E009E7DD1 /* icons8-gps_device_filled.png in Resources */ = {isa = PBXBuildFile; fileRef = F87349ED208C1A4D009E7DD1 /* icons8-gps_device_filled.png */; };
 		F89CFD94206DC4A600B9ACC8 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
 		F8C8E28B206C405900520784 /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
 		F8E5CB4B206ECAFE007E5820 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */; };
@@ -99,7 +98,6 @@
 		F83BE2542068626B009B4F9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F83BE2562068626B009B4F9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F83DB98E20802A8C0039E05D /* stops.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = stops.json; path = ../../../../Desktop/stops.json; sourceTree = "<group>"; };
-		F87349ED208C1A4D009E7DD1 /* icons8-gps_device_filled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icons8-gps_device_filled.png"; path = "../../../../Desktop/icons8-gps_device_filled.png"; sourceTree = "<group>"; };
 		F89CFD93206DC4A600B9ACC8 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		F8C8E287206B26A100520784 /* BusInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusInfo.swift; sourceTree = "<group>"; };
 		F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -175,7 +173,6 @@
 				F8F231AC2079CCA800082636 /* busInfoCell.swift */,
 				F83BE22F2068626A009B4F9D /* Main.storyboard */,
 				F83BE2322068626A009B4F9D /* Assets.xcassets */,
-				F87349ED208C1A4D009E7DD1 /* icons8-gps_device_filled.png */,
 				F83BE2342068626A009B4F9D /* LaunchScreen.storyboard */,
 				F83BE2372068626A009B4F9D /* Info.plist */,
 			);
@@ -333,7 +330,6 @@
 				F83BE2362068626A009B4F9D /* LaunchScreen.storyboard in Resources */,
 				F83BE2332068626A009B4F9D /* Assets.xcassets in Resources */,
 				F83BE2312068626A009B4F9D /* Main.storyboard in Resources */,
-				F87349EE208C1A4E009E7DD1 /* icons8-gps_device_filled.png in Resources */,
 				F83DB98F20802A8D0039E05D /* stops.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

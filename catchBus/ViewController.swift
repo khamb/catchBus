@@ -61,6 +61,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         // Dispose of any resources that can be recreated.
     }
     
+    
+    @IBAction func centerBtnPressed(_ sender: Any) {
+        if self.locationAuthorization == .authorizedAlways || self.locationAuthorization == .authorizedWhenInUse{
+            self.centerOnUserLocation()
+        }
+    }
+    
     func initLocationServices(){
         if self.locationAuthorization == .notDetermined{
             self.locationManager.requestAlwaysAuthorization()
