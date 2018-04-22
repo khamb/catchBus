@@ -39,7 +39,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         self.locationManager.delegate = self
         self.initLocationServices()
         self.userCoordinates = self.locationManager.location?.coordinate
-        print(self.userCoordinatesToString())
         
         // Do any additional setup after loading the view, typically from a nib.
         self.busesTable.dataSource = self
@@ -88,14 +87,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     
     @objc func loadTable(){
         
-        //"45.414535,-75.671526"self.userCoordinatesToString()
+        //"45.412342,-75.679179"self.userCoordinatesToString()
         
         //first get closest stops' name
         DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { closest in
             //then get its stop number
-
+            self.rightLabel.adjustsFontSizeToFitWidth = true
+            self.rightLabel.text = closest
+        
             DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
-                self.rightLabel.text = closest
                 //after that get bus infos from that stop
                 DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
                     self.busesData = data
