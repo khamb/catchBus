@@ -9,11 +9,13 @@
 import UIKit
 import CoreLocation
 import WatchConnectivity
+import MapKit
 
 class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource {
  
     
     
+    @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var busesTable: UITableView!
     var busesData = [BusInfo]()
     var tableRefresher:UIRefreshControl = UIRefreshControl()
@@ -27,6 +29,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //init mapView
+        self.mapView.delegate = self
+        self.mapView.showsUserLocation = true
+        self.centerOnUserLocation()
         
         //init location services
         self.locationManager.delegate = self
@@ -79,7 +86,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         //first get closest stops' name
         DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { closest in
             //then get its stop number
-            print(closest)
+
             DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
                 self.rightLabel.text = closest
                 //after that get bus infos from that stop
@@ -162,6 +169,16 @@ extension ViewController:  WCSessionDelegate{
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
         
+    }
+}
+
+extension ViewController: MKMapViewDelegate{
+    
+    func centerOnUserLocation(){
+        if let location = self.locationManager.location?.coordinate{
+            let region = MKCoordinateRegionMakeWithDistance(location, 1000, 1000)
+            mapView.setRegion(region, animated: true)
+        }
     }
 }
 
