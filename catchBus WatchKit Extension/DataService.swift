@@ -86,7 +86,7 @@ class DataService{
        
         //let location = "45.414535,-75.671526"
         let API_KEY = "AIzaSyBmG3KTRGPdOgzuBqw_CUYlNbgLyV81xsM"
-        let url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+location+"&radius=100&type=bus_station&key="+API_KEY
+        let url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+location+"&radius=1000&type=bus_station&key="+API_KEY
         
         Alamofire.request(url).responseJSON { response in
             

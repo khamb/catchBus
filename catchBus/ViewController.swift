@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import WatchConnectivity
 
-class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDelegate, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource {
  
     
     
@@ -19,15 +19,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     var tableRefresher:UIRefreshControl = UIRefreshControl()
     let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 70, height: 20))
     
-    var locationManager = CLLocationManager()
     var session: WCSession!
+    
+    var locationManager = CLLocationManager()
+    let locationAuthorization = CLLocationManager.authorizationStatus()
     var userCoordinates: CLLocationCoordinate2D!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //init location services
+        self.locationManager.delegate = self
+        self.initLocationServices()
+        self.userCoordinates = self.locationManager.location?.coordinate
+        print(self.userCoordinatesToString())
+        
         // Do any additional setup after loading the view, typically from a nib.
         self.busesTable.dataSource = self
         self.busesTable.delegate = self
+        self.loadTable()
+        self.initTableRefresher()
         
         //init navigation bar
         navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon"))
@@ -35,28 +46,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         rightLabel.textColor = UIColor.white
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: rightLabel), UIBarButtonItem(customView: locIconImageView)]
         
-        
-        
-        
-        DispatchQueue.main.async {
-            //activate watch connectivity if the device support it
-            if (WCSession.isSupported()) {
-                self.session = WCSession.default
-                self.session.delegate = self
-                self.session.activate()
-            }
-            
-            //set up location service
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            self.locationManager.requestWhenInUseAuthorization()
-            self.locationManager.delegate = self
-            self.locationManager.startUpdatingLocation()
-            self.userCoordinates = self.locationManager.location?.coordinate
-
-            self.loadTable()
-        }
-        
-        self.initTableRefresher()
 
     }
 
@@ -65,30 +54,37 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         // Dispose of any resources that can be recreated.
     }
     
-    func initTableRefresher(){
-        self.busesTable.refreshControl = self.tableRefresher
-        self.tableRefresher.addTarget(self, action: #selector(ViewController.self.loadTable), for: UIControlEvents.valueChanged)
-        self.tableRefresher.attributedTitle = NSAttributedString(string: "updating bus informations ...")
-
+    func initLocationServices(){
+        if self.locationAuthorization == .notDetermined{
+            self.locationManager.requestAlwaysAuthorization()
+        } else {
+            return
+        }
+    }
+    
+    
+    func userCoordinatesToString()->String{
+        var latitude = Double(self.userCoordinates.latitude)
+        latitude = floor(pow(10.0, 6) * latitude)/pow(10.0, 6)
+        var longitude = Double(self.userCoordinates.longitude)
+        longitude = floor(pow(10.0, 6) * longitude)/pow(10.0, 6)
+        let toString = String(latitude)+","+String(longitude)
+        return toString
     }
     
     @objc func loadTable(){
         
-        let latitude = String(self.userCoordinates.latitude)
-        let longitude = String(self.userCoordinates.longitude)
-        let userLocation = latitude+","+longitude
-        print(userLocation)
+        //"45.414535,-75.671526"self.userCoordinatesToString()
         
         //first get closest stops' name
-        DataService.instance.getStopName(location: userLocation, handler: { closest in
-            
+        DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { closest in
             //then get its stop number
+            print(closest)
             DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
                 self.rightLabel.text = closest
                 //after that get bus infos from that stop
                 DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
                     self.busesData = data
-                    
                     //filter buses out of service
                     self.busesData = self.busesData.filter({bus in
                             return bus.time != "-"
@@ -98,7 +94,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
                     self.busesData.sort(by: {(bus1, bus2) in
                         return Int(bus1.time)! < Int(bus2.time)!
                     })
-                    
+
                     //finally load table with buses data
                     self.busesTable.reloadData()
                     
@@ -109,19 +105,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
         self.tableRefresher.endRefreshing()
     }
     
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-    }
-    
-    func sessionDidBecomeInactive(_ session: WCSession) {
-        self.session.activate()
-    }
-    
-    func sessionDidDeactivate(_ session: WCSession) {
-        self.session.activate()
-    }
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-       
+    func initTableRefresher(){
+        self.busesTable.refreshControl = self.tableRefresher
+        self.tableRefresher.addTarget(self, action: #selector(ViewController.self.loadTable), for: UIControlEvents.valueChanged)
+        self.tableRefresher.attributedTitle = NSAttributedString(string: "updating bus informations ...")
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -148,5 +136,33 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WCSessionDele
     
 }
 
+
+
+extension ViewController:  WCSessionDelegate{
+    
+    func initWCSession(){
+        //activate watch connectivity if the device support it
+        if (WCSession.isSupported()) {
+            self.session = WCSession.default
+            self.session.delegate = self
+            self.session.activate()
+        }
+    }
+    
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+    }
+    
+    func sessionDidBecomeInactive(_ session: WCSession) {
+     
+    }
+    
+    func sessionDidDeactivate(_ session: WCSession) {
+
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+        
+    }
+}
 
 
