@@ -26,6 +26,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     var locationManager = CLLocationManager()
     let locationAuthorization = CLLocationManager.authorizationStatus()
     var userCoordinates: CLLocationCoordinate2D!
+
+    @IBOutlet weak var tableActivityViewIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,8 +45,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         // Do any additional setup after loading the view, typically from a nib.
         self.busesTable.dataSource = self
         self.busesTable.delegate = self
-        self.loadTable()
-        self.initTableRefresher()
         
         //init navigation bar
         navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon"))
@@ -52,6 +52,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         rightLabel.textColor = UIColor.white
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: rightLabel), UIBarButtonItem(customView: locIconImageView)]
         
+        self.tableActivityViewIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: { //just to simulate a delay
+            self.loadTable()
+        })
+       
+        for i in 00...100000{
+            print(i)
+        }
+        UIApplication.shared.endIgnoringInteractionEvents()
+        
+        
+        self.initTableRefresher()
 
     }
 
@@ -64,6 +78,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     @IBAction func centerBtnPressed(_ sender: Any) {
         if self.locationAuthorization == .authorizedAlways || self.locationAuthorization == .authorizedWhenInUse{
             self.centerOnUserLocation()
+            self.loadTable()
         }
     }
     
@@ -86,8 +101,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     }
     
     @objc func loadTable(){
-        
-        //"45.412342,-75.679179"self.userCoordinatesToString()
+
         
         //first get closest stops' name
         DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { closest in
@@ -117,6 +131,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         })
         
         self.tableRefresher.endRefreshing()
+        self.tableActivityViewIndicator.stopAnimating()
+
     }
     
     func initTableRefresher(){
