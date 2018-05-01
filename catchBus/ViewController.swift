@@ -149,6 +149,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         return self.busesData.count
     }
     
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let favorite = UIContextualAction(style: .normal, title: "Add to favorites") { (action, view, nil) in
+        }
+        favorite.image = UIImage(named: "fav")
+        return UISwipeActionsConfiguration(actions: [favorite])
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = self.busesTable.dequeueReusableCell(withIdentifier: "busInfoCell") as? busInfoCell{
             cell.initRow(busInfo: self.busesData[indexPath.row])
