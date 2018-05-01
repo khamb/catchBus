@@ -54,14 +54,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         
         self.tableActivityViewIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
-        
         DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: { //just to simulate a delay
             self.loadTable()
+            self.tableActivityViewIndicator.stopAnimating()
         })
-       
-        for i in 00...100000{
-            print(i)
-        }
         UIApplication.shared.endIgnoringInteractionEvents()
         
         
@@ -131,7 +127,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         })
         
         self.tableRefresher.endRefreshing()
-        self.tableActivityViewIndicator.stopAnimating()
 
     }
     
