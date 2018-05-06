@@ -20,6 +20,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     var busesData = [BusInfo]()
     var tableRefresher:UIRefreshControl = UIRefreshControl()
     let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 70, height: 20))
+    let leftButton = UIButton(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
     
     var session: WCSession!
     
@@ -46,20 +47,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         self.busesTable.dataSource = self
         self.busesTable.delegate = self
         
-        //init navigation bar
-        navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon"))
+        //***customize navigation bar
+        navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon")) //title icon
+        
+        //adding right bar item
         let locIconImageView = UIImageView(image: UIImage(named: "locIcon"))
         rightLabel.textColor = UIColor.white
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: rightLabel), UIBarButtonItem(customView: locIconImageView)]
         
+        //adding left bar item
+        leftButton.setTitle("Favourites🚍", for: .normal)
+        leftButton.tintColor = UIColor.white
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftButton)
+        //end of customize navigation bar ***
         self.tableActivityViewIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
         DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: { //just to simulate a delay
             self.loadTable()
             self.tableActivityViewIndicator.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
         })
-        UIApplication.shared.endIgnoringInteractionEvents()
-        
         
         self.initTableRefresher()
 
@@ -69,7 +76,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
     
     @IBAction func centerBtnPressed(_ sender: Any) {
         if self.locationAuthorization == .authorizedAlways || self.locationAuthorization == .authorizedWhenInUse{
@@ -150,7 +156,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let favorite = UIContextualAction(style: .normal, title: "Add to favorites") { (action, view, nil) in
+        let favorite = UIContextualAction(style: .normal, title: "") { (action, view, completed) in
+            
+            if FavouriteBuses.instance.addToFavourites(bus: self.busesData[indexPath.row]){
+                let alert = UIAlertController(title: "Add to favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
+                self.present(alert, animated: true, completion: {
+                    alert.dismiss(animated: true, completion: nil)
+                })
+                completed(true)
+            }
         }
         favorite.image = UIImage(named: "fav")
         return UISwipeActionsConfiguration(actions: [favorite])

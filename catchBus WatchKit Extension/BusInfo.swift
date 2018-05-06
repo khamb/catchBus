@@ -18,4 +18,8 @@ struct BusInfo {
         self.routeHeading = routeHeading
         self.time = time
     }
+    
+    static func !=(left: BusInfo, right: BusInfo)->Bool{
+        return left.no == right.no
+    }
 }
