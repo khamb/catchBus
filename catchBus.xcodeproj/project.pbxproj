@@ -9,9 +9,12 @@
 /* Begin PBXBuildFile section */
 		0A0271578F7D454F8C1662A0 /* Pods_catchBus_WatchKit_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A4A8A19F061E580A45FA7D7 /* Pods_catchBus_WatchKit_Extension.framework */; };
 		1F2FC423F8B4D9A8455ADA45 /* Pods_catchBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F994D50585B094FACC7787A6 /* Pods_catchBus.framework */; };
+		F800058B20A4C6AB006F8012 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F800058A20A4C6AB006F8012 /* TabBarViewController.swift */; };
 		F8109FDC2069A6E90064CED7 /* rowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8109FDB2069A6E90064CED7 /* rowController.swift */; };
 		F8109FDE2069B2A70064CED7 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83BE24E2068626B009B4F9D /* InterfaceController.swift */; };
 		F8287F88209F76550017060E /* FavouriteBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8287F87209F76550017060E /* FavouriteBuses.swift */; };
+		F8287F8A209FAF920017060E /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8287F89209FAF920017060E /* FavouritesViewController.swift */; };
+		F8287F8E209FB76E0017060E /* busInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F8287F8D209FB76E0017060E /* busInfoCell.xib */; };
 		F83BE22C2068626A009B4F9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83BE22B2068626A009B4F9D /* AppDelegate.swift */; };
 		F83BE22E2068626A009B4F9D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83BE22D2068626A009B4F9D /* ViewController.swift */; };
 		F83BE2312068626A009B4F9D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F83BE22F2068626A009B4F9D /* Main.storyboard */; };
@@ -82,8 +85,11 @@
 		56D8E80961207400ED159CA5 /* Pods-catchBus WatchKit Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-catchBus WatchKit Extension.release.xcconfig"; path = "Pods/Target Support Files/Pods-catchBus WatchKit Extension/Pods-catchBus WatchKit Extension.release.xcconfig"; sourceTree = "<group>"; };
 		7F1743301390B5AA57724506 /* Pods-catchBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-catchBus.release.xcconfig"; path = "Pods/Target Support Files/Pods-catchBus/Pods-catchBus.release.xcconfig"; sourceTree = "<group>"; };
 		84F63A1C1DDD1CD4A72B26A2 /* Pods-catchBus WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-catchBus WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-catchBus WatchKit Extension/Pods-catchBus WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
+		F800058A20A4C6AB006F8012 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		F8109FDB2069A6E90064CED7 /* rowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rowController.swift; sourceTree = "<group>"; };
 		F8287F87209F76550017060E /* FavouriteBuses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteBuses.swift; sourceTree = "<group>"; };
+		F8287F89209FAF920017060E /* FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
+		F8287F8D209FB76E0017060E /* busInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = busInfoCell.xib; sourceTree = "<group>"; };
 		F83BE2282068626A009B4F9D /* catchBus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = catchBus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F83BE22B2068626A009B4F9D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F83BE22D2068626A009B4F9D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -177,10 +183,13 @@
 				F83BE22D2068626A009B4F9D /* ViewController.swift */,
 				F8287F87209F76550017060E /* FavouriteBuses.swift */,
 				F8F231AC2079CCA800082636 /* busInfoCell.swift */,
+				F8287F8D209FB76E0017060E /* busInfoCell.xib */,
 				F83BE22F2068626A009B4F9D /* Main.storyboard */,
 				F83BE2322068626A009B4F9D /* Assets.xcassets */,
 				F83BE2342068626A009B4F9D /* LaunchScreen.storyboard */,
 				F83BE2372068626A009B4F9D /* Info.plist */,
+				F8287F89209FAF920017060E /* FavouritesViewController.swift */,
+				F800058A20A4C6AB006F8012 /* TabBarViewController.swift */,
 			);
 			path = catchBus;
 			sourceTree = "<group>";
@@ -335,6 +344,7 @@
 			files = (
 				F83BE2362068626A009B4F9D /* LaunchScreen.storyboard in Resources */,
 				F83BE2332068626A009B4F9D /* Assets.xcassets in Resources */,
+				F8287F8E209FB76E0017060E /* busInfoCell.xib in Resources */,
 				F83BE2312068626A009B4F9D /* Main.storyboard in Resources */,
 				F8E62E2F209E73D000B6505B /* stops.json in Resources */,
 			);
@@ -474,9 +484,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8287F8A209FAF920017060E /* FavouritesViewController.swift in Sources */,
 				F83BE22E2068626A009B4F9D /* ViewController.swift in Sources */,
 				F8287F88209F76550017060E /* FavouriteBuses.swift in Sources */,
 				F83BE22C2068626A009B4F9D /* AppDelegate.swift in Sources */,
+				F800058B20A4C6AB006F8012 /* TabBarViewController.swift in Sources */,
 				F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */,
 				F87349F4208C301F009E7DD1 /* StopPin.swift in Sources */,
 				F8F231AD2079CCA800082636 /* busInfoCell.swift in Sources */,
@@ -734,6 +746,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7XS83WMSPL;
 				INFOPLIST_FILE = catchBus/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -750,6 +763,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7XS83WMSPL;
 				INFOPLIST_FILE = catchBus/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus";
 				PRODUCT_NAME = "$(TARGET_NAME)";

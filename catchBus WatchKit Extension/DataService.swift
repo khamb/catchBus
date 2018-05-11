@@ -51,6 +51,15 @@ class DataService{
             } else {
                 print(response.result.error.debugDescription)
             }
+            //filter buses out of service
+            buses = buses.filter({bus in
+                return bus.time != "-"
+            })
+            
+            //sort by ascending arrival time
+            buses.sort(by: {(bus1, bus2) in
+                return Int(bus1.time)! < Int(bus2.time)!
+            })
             handler(buses)
         }// end of API call
     }
@@ -82,7 +91,7 @@ class DataService{
     
     /* Function to get name of the stop near by
      */
-    func getStopName(location: String, handler: @escaping (_ stopNumber: String) -> ()){
+    func getStopName(location: String, handler: @escaping (_ stopName: String) -> ()){
        
         //let location = "45.414535,-75.671526"
         let API_KEY = "AIzaSyBmG3KTRGPdOgzuBqw_CUYlNbgLyV81xsM"

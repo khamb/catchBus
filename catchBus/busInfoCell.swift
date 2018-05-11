@@ -28,8 +28,6 @@ class busInfoCell: UITableViewCell {
         busNoLabel.text = busInfo.no
         headingLabel.text = busInfo.routeHeading
         timeLabel.text = busInfo.time
-        
-
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

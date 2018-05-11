@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CoreLocation
 import WatchConnectivity
 import MapKit
 
@@ -19,15 +18,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     @IBOutlet weak var busesTable: UITableView!
     var busesData = [BusInfo]()
     var tableRefresher:UIRefreshControl = UIRefreshControl()
-    let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 70, height: 20))
-    let leftButton = UIButton(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
     
     var session: WCSession!
     
-    var locationManager = CLLocationManager()
-    let locationAuthorization = CLLocationManager.authorizationStatus()
-    var userCoordinates: CLLocationCoordinate2D!
-
     @IBOutlet weak var tableActivityViewIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
@@ -38,38 +31,25 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         self.mapView.showsUserLocation = true
         self.centerOnUserLocation()
         
-        //init location services
-        self.locationManager.delegate = self
-        self.initLocationServices()
-        self.userCoordinates = self.locationManager.location?.coordinate
-        
-        // Do any additional setup after loading the view, typically from a nib.
+        // configure busesTable
         self.busesTable.dataSource = self
         self.busesTable.delegate = self
         
-        //***customize navigation bar
-        navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon")) //title icon
+        //register cell
+        self.busesTable.register(UINib(nibName: "busInfoCell", bundle: nil), forCellReuseIdentifier: "busInfoCellIdentifier")
         
-        //adding right bar item
-        let locIconImageView = UIImageView(image: UIImage(named: "locIcon"))
-        rightLabel.textColor = UIColor.white
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: rightLabel), UIBarButtonItem(customView: locIconImageView)]
-        
-        //adding left bar item
-        leftButton.setTitle("Favourites🚍", for: .normal)
-        leftButton.tintColor = UIColor.white
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftButton)
-        //end of customize navigation bar ***
         self.tableActivityViewIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
-        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: { //just to simulate a delay
-            self.loadTable()
-            self.tableActivityViewIndicator.stopAnimating()
-            UIApplication.shared.endIgnoringInteractionEvents()
+        self.loadTable(handler: { completed in
+            DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: { //just to simulate a delay
+                self.busesTable.reloadData()
+                self.tableActivityViewIndicator.stopAnimating()
+                UIApplication.shared.endIgnoringInteractionEvents()
+            })
         })
+
         
         self.initTableRefresher()
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -78,62 +58,27 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     }
     
     @IBAction func centerBtnPressed(_ sender: Any) {
-        if self.locationAuthorization == .authorizedAlways || self.locationAuthorization == .authorizedWhenInUse{
+        if TabBarViewController.locationAuthorization == .authorizedAlways || TabBarViewController.locationAuthorization == .authorizedWhenInUse{
             self.centerOnUserLocation()
-            self.loadTable()
-        }
-    }
-    
-    func initLocationServices(){
-        if self.locationAuthorization == .notDetermined{
-            self.locationManager.requestAlwaysAuthorization()
-        } else {
-            return
+            //self.loadTable()
         }
     }
     
     
-    func userCoordinatesToString()->String{
-        var latitude = Double(self.userCoordinates.latitude)
-        latitude = floor(pow(10.0, 6) * latitude)/pow(10.0, 6)
-        var longitude = Double(self.userCoordinates.longitude)
-        longitude = floor(pow(10.0, 6) * longitude)/pow(10.0, 6)
-        let toString = String(latitude)+","+String(longitude)
-        return toString
-    }
-    
-    @objc func loadTable(){
 
-        
+    @objc func loadTable(handler: @escaping (_ completed: Bool)->()){
         //first get closest stops' name
-        DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { closest in
-            //then get its stop number
-            self.rightLabel.adjustsFontSizeToFitWidth = true
-            self.rightLabel.text = closest
-        
+        DataService.instance.getStopName(location: TabBarViewController.userCoordinatesToString(), handler: { closest in
+            
             DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
                 //after that get bus infos from that stop
                 DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
                     self.busesData = data
-                    //filter buses out of service
-                    self.busesData = self.busesData.filter({bus in
-                            return bus.time != "-"
-                    })
-                    
-                    //sort by ascending arrival time
-                    self.busesData.sort(by: {(bus1, bus2) in
-                        return Int(bus1.time)! < Int(bus2.time)!
-                    })
-
-                    //finally load table with buses data
-                    self.busesTable.reloadData()
-                    
+                    self.tableRefresher.endRefreshing()
+                    handler(true)
                 })
             })
         })
-        
-        self.tableRefresher.endRefreshing()
-
     }
     
     func initTableRefresher(){
@@ -143,13 +88,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-            self.userCoordinates = locations[0].coordinate
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
-    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.busesData.count
@@ -164,21 +102,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
                     alert.dismiss(animated: true, completion: nil)
                 })
                 completed(true)
+            } else {
+                let alert = UIAlertController(title: "Add to favourites", message: "❌ ALREADY IN FAVOURITES!", preferredStyle: .alert)
+                self.present(alert, animated: true, completion: {
+                    alert.dismiss(animated: true, completion: nil)
+                })
+                completed(true)
             }
         }
         favorite.image = UIImage(named: "fav")
         return UISwipeActionsConfiguration(actions: [favorite])
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = self.busesTable.dequeueReusableCell(withIdentifier: "busInfoCell") as? busInfoCell{
-            cell.initRow(busInfo: self.busesData[indexPath.row])
-            return cell
-        }
-        
-        return busInfoCell()
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+       
     }
-
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        guard let cell = busesTable.dequeueReusableCell(withIdentifier: "busInfoCellIdentifier") as? busInfoCell else {return UITableViewCell()}
+        cell.initRow(busInfo: self.busesData[indexPath.row])
+        return cell
+    }
     
 }
 
@@ -214,7 +159,7 @@ extension ViewController:  WCSessionDelegate{
 extension ViewController: MKMapViewDelegate{
     
     func centerOnUserLocation(){
-        if let location = self.locationManager.location?.coordinate{
+        if let location = TabBarViewController.locationManager.location?.coordinate{
             let region = MKCoordinateRegionMakeWithDistance(location, 1000, 1000)
             mapView.setRegion(region, animated: true)
         }
