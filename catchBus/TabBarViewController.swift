@@ -35,7 +35,10 @@ class TabBarViewController: UITabBarController, CLLocationManagerDelegate{
        
         DataService.instance.getStopName(location: TabBarViewController.userCoordinatesToString(), handler: { closest in
             //then get its stop number
-             self.rightLabel.text = closest
+            DispatchQueue.main.async {
+               self.rightLabel.text = closest
+            }
+            
         })
         
         

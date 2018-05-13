@@ -7,33 +7,34 @@
 //
 
 import Foundation
-import Alamofire
 import SwiftyJSON
 
 class FavouriteBuses{
     static let instance = FavouriteBuses()
     
-    private(set) var favourites = [BusInfo]() //[Int: (BusInfo,Int)] bus.no, BusInfo, stopNumber
-    
-    func addToFavourites(bus: BusInfo)->Bool{
-        if self.favourites.contains(where: { favBus in return bus.no == favBus.no}){
+    private(set) var favourites = [(String,BusInfo)]() //[Int: (BusInfo,Int)] bus.no, BusInfo, stopNumber
+
+    func addToFavourites(bus: BusInfo, stopCode: String)->Bool{
+        if self.favourites.contains(where: {(key,val) in return val.no==bus.no}) {
             return false
         }
-        self.favourites.append(bus)
+        self.favourites.append((stopCode,bus))
         return true
     }
     
     func getBusInfo(no: Int, stop: Int){
         let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStop?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&routeNo=\(no)&stopNo=\(stop)"
-        Alamofire.request(url).responseJSON(completionHandler: { response in
+        let urlRequest = URLRequest(url: URL(string: url)!)
+        
+        URLSession.shared.dataTask(with: urlRequest, completionHandler: { (data, response, error) in
             
-            if response.result.error == nil{
-                let jsonResponse = JSON(response.result)
+            if error == nil{
+                let jsonResponse = JSON(data!)
                 print(jsonResponse)
             } else {
-                print(response.result.error.debugDescription)
+                print(error.debugDescription)
             }
-        })
+        }).resume()
         
     }
 }

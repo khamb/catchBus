@@ -10,7 +10,7 @@ import UIKit
 import WatchConnectivity
 import MapKit
 
-class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
  
     
     
@@ -18,7 +18,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     @IBOutlet weak var busesTable: UITableView!
     var busesData = [BusInfo]()
     var tableRefresher:UIRefreshControl = UIRefreshControl()
-    
+    static var stopCode = ""
     var session: WCSession!
     
     @IBOutlet weak var tableActivityViewIndicator: UIActivityIndicatorView!
@@ -34,20 +34,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         // configure busesTable
         self.busesTable.dataSource = self
         self.busesTable.delegate = self
-        
         //register cell
         self.busesTable.register(UINib(nibName: "busInfoCell", bundle: nil), forCellReuseIdentifier: "busInfoCellIdentifier")
-        
-        self.tableActivityViewIndicator.startAnimating()
-        UIApplication.shared.beginIgnoringInteractionEvents()
-        self.loadTable(handler: { completed in
-            DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: { //just to simulate a delay
-                self.busesTable.reloadData()
-                self.tableActivityViewIndicator.stopAnimating()
-                UIApplication.shared.endIgnoringInteractionEvents()
-            })
-        })
-
         
         self.initTableRefresher()
     }
@@ -57,35 +45,56 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tableActivityViewIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        self.loadTable(handler: { completed in
+            DispatchQueue.main.async{
+                self.busesTable.reloadData()
+                self.tableActivityViewIndicator.stopAnimating()
+                UIApplication.shared.endIgnoringInteractionEvents()
+            }
+        })
+    }
+
     @IBAction func centerBtnPressed(_ sender: Any) {
         if TabBarViewController.locationAuthorization == .authorizedAlways || TabBarViewController.locationAuthorization == .authorizedWhenInUse{
             self.centerOnUserLocation()
             //self.loadTable()
         }
     }
-    
-    
 
-    @objc func loadTable(handler: @escaping (_ completed: Bool)->()){
+     func loadTable(handler: @escaping (_ completed: Bool)->()){
         //first get closest stops' name
         DataService.instance.getStopName(location: TabBarViewController.userCoordinatesToString(), handler: { closest in
             
             DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
                 //after that get bus infos from that stop
+                ViewController.stopCode = stopCode
                 DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
                     self.busesData = data
-                    self.tableRefresher.endRefreshing()
                     handler(true)
                 })
             })
         })
     }
     
+    @objc func refreshTable(){
+        self.loadTable(handler: { complete in
+            DispatchQueue.main.async {
+                self.busesTable.reloadData()
+                self.tableRefresher.endRefreshing()
+            }
+        })
+    }
+    
     func initTableRefresher(){
         self.busesTable.refreshControl = self.tableRefresher
-        self.tableRefresher.addTarget(self, action: #selector(ViewController.self.loadTable), for: UIControlEvents.valueChanged)
+        self.tableRefresher.addTarget(self, action: #selector(ViewController.self.refreshTable), for: UIControlEvents.valueChanged)
         self.tableRefresher.attributedTitle = NSAttributedString(string: "updating bus informations ...")
-        
+       // self.tableRefresher.endRefreshing()
     }
     
     
@@ -96,7 +105,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let favorite = UIContextualAction(style: .normal, title: "") { (action, view, completed) in
             
-            if FavouriteBuses.instance.addToFavourites(bus: self.busesData[indexPath.row]){
+            if FavouriteBuses.instance.addToFavourites(bus: self.busesData[indexPath.row], stopCode: ViewController.stopCode){
                 let alert = UIAlertController(title: "Add to favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
                 self.present(alert, animated: true, completion: {
                     alert.dismiss(animated: true, completion: nil)
@@ -114,12 +123,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITableViewDe
         return UISwipeActionsConfiguration(actions: [favorite])
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-       
-    }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         guard let cell = busesTable.dequeueReusableCell(withIdentifier: "busInfoCellIdentifier") as? busInfoCell else {return UITableViewCell()}
         cell.initRow(busInfo: self.busesData[indexPath.row])
         return cell

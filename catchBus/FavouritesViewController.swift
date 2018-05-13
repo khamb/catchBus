@@ -14,10 +14,10 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Do any additional setup after loading the view.
         self.favouritesTable.delegate = self
         self.favouritesTable.dataSource = self
-        // Do any additional setup after loading the view.
-        print(FavouriteBuses.instance.favourites.count)
+        self.favouritesTable.rowHeight = 70
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,8 +25,10 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         // Dispose of any resources that can be recreated.
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.favouritesTable.reloadData()
+        print(FavouriteBuses.instance.favourites)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -35,7 +37,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = Bundle.main.loadNibNamed("busInfoCell", owner: self, options: nil)?.first as? busInfoCell else {return UITableViewCell()}
-        cell.initRow(busInfo: FavouriteBuses.instance.favourites[indexPath.row])
+        cell.initRow(busInfo: FavouriteBuses.instance.favourites[indexPath.row].1)
         return cell
     }
     /*
