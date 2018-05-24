@@ -11,6 +11,9 @@
 		1F2FC423F8B4D9A8455ADA45 /* Pods_catchBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F994D50585B094FACC7787A6 /* Pods_catchBus.framework */; };
 		F8109FDC2069A6E90064CED7 /* rowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8109FDB2069A6E90064CED7 /* rowController.swift */; };
 		F8109FDE2069B2A70064CED7 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83BE24E2068626B009B4F9D /* InterfaceController.swift */; };
+		F8287F88209F76550017060E /* FavouriteBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8287F87209F76550017060E /* FavouriteBuses.swift */; };
+		F8287F8A209FAF920017060E /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8287F89209FAF920017060E /* FavouritesViewController.swift */; };
+		F8287F8E209FB76E0017060E /* busInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F8287F8D209FB76E0017060E /* busInfoCell.xib */; };
 		F83BE22C2068626A009B4F9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83BE22B2068626A009B4F9D /* AppDelegate.swift */; };
 		F83BE22E2068626A009B4F9D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83BE22D2068626A009B4F9D /* ViewController.swift */; };
 		F83BE2312068626A009B4F9D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F83BE22F2068626A009B4F9D /* Main.storyboard */; };
@@ -22,12 +25,13 @@
 		F83BE24A2068626B009B4F9D /* catchBus WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F83BE2492068626B009B4F9D /* catchBus WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F83BE2512068626B009B4F9D /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83BE2502068626B009B4F9D /* ExtensionDelegate.swift */; };
 		F83BE2552068626B009B4F9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F83BE2542068626B009B4F9D /* Assets.xcassets */; };
-		F83DB98F20802A8D0039E05D /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F83DB98E20802A8C0039E05D /* stops.json */; };
-		F83DB99020802A8D0039E05D /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F83DB98E20802A8C0039E05D /* stops.json */; };
 		F87349F4208C301F009E7DD1 /* StopPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87349F3208C301F009E7DD1 /* StopPin.swift */; };
 		F89CFD94206DC4A600B9ACC8 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
-		F8C8E28B206C405900520784 /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
+		F8DB931420B641D400DFAB1C /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
+		F8DB931620B6501900DFAB1C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8DB931520B6501900DFAB1C /* SearchViewController.swift */; };
 		F8E5CB4B206ECAFE007E5820 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */; };
+		F8E62E2E209E734D00B6505B /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F8E62E2D209E734D00B6505B /* stops.json */; };
+		F8E62E2F209E73D000B6505B /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F8E62E2D209E734D00B6505B /* stops.json */; };
 		F8F231AD2079CCA800082636 /* busInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F231AC2079CCA800082636 /* busInfoCell.swift */; };
 		F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
 		F8F231AF2079CFD000082636 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
@@ -82,6 +86,9 @@
 		7F1743301390B5AA57724506 /* Pods-catchBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-catchBus.release.xcconfig"; path = "Pods/Target Support Files/Pods-catchBus/Pods-catchBus.release.xcconfig"; sourceTree = "<group>"; };
 		84F63A1C1DDD1CD4A72B26A2 /* Pods-catchBus WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-catchBus WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-catchBus WatchKit Extension/Pods-catchBus WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		F8109FDB2069A6E90064CED7 /* rowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rowController.swift; sourceTree = "<group>"; };
+		F8287F87209F76550017060E /* FavouriteBuses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteBuses.swift; sourceTree = "<group>"; };
+		F8287F89209FAF920017060E /* FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
+		F8287F8D209FB76E0017060E /* busInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = busInfoCell.xib; sourceTree = "<group>"; };
 		F83BE2282068626A009B4F9D /* catchBus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = catchBus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F83BE22B2068626A009B4F9D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F83BE22D2068626A009B4F9D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -98,11 +105,12 @@
 		F83BE2502068626B009B4F9D /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		F83BE2542068626B009B4F9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F83BE2562068626B009B4F9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F83DB98E20802A8C0039E05D /* stops.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = stops.json; path = ../../../../Desktop/stops.json; sourceTree = "<group>"; };
 		F87349F3208C301F009E7DD1 /* StopPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopPin.swift; sourceTree = "<group>"; };
 		F89CFD93206DC4A600B9ACC8 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		F8C8E287206B26A100520784 /* BusInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusInfo.swift; sourceTree = "<group>"; };
+		F8DB931520B6501900DFAB1C /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchViewController.swift; path = catchBus/Controller/SearchViewController.swift; sourceTree = SOURCE_ROOT; };
 		F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		F8E62E2D209E734D00B6505B /* stops.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stops.json; sourceTree = "<group>"; };
 		F8F231AC2079CCA800082636 /* busInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = busInfoCell.swift; sourceTree = "<group>"; };
 		F994D50585B094FACC7787A6 /* Pods_catchBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_catchBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -170,10 +178,11 @@
 		F83BE22A2068626A009B4F9D /* catchBus */ = {
 			isa = PBXGroup;
 			children = (
-				F87349F3208C301F009E7DD1 /* StopPin.swift */,
+				F8DB931320B6404D00DFAB1C /* Service */,
+				F8DB931220B6400600DFAB1C /* Controller */,
+				F8DB931120B63FFF00DFAB1C /* Model */,
+				F8DB931020B63FF900DFAB1C /* View */,
 				F83BE22B2068626A009B4F9D /* AppDelegate.swift */,
-				F83BE22D2068626A009B4F9D /* ViewController.swift */,
-				F8F231AC2079CCA800082636 /* busInfoCell.swift */,
 				F83BE22F2068626A009B4F9D /* Main.storyboard */,
 				F83BE2322068626A009B4F9D /* Assets.xcassets */,
 				F83BE2342068626A009B4F9D /* LaunchScreen.storyboard */,
@@ -196,15 +205,51 @@
 			isa = PBXGroup;
 			children = (
 				F83BE24E2068626B009B4F9D /* InterfaceController.swift */,
-				F83DB98E20802A8C0039E05D /* stops.json */,
 				F83BE2502068626B009B4F9D /* ExtensionDelegate.swift */,
-				F8C8E287206B26A100520784 /* BusInfo.swift */,
 				F83BE2542068626B009B4F9D /* Assets.xcassets */,
 				F83BE2562068626B009B4F9D /* Info.plist */,
 				F8109FDB2069A6E90064CED7 /* rowController.swift */,
-				F89CFD93206DC4A600B9ACC8 /* DataService.swift */,
 			);
 			path = "catchBus WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		F8DB931020B63FF900DFAB1C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F87349F3208C301F009E7DD1 /* StopPin.swift */,
+				F8F231AC2079CCA800082636 /* busInfoCell.swift */,
+				F8287F8D209FB76E0017060E /* busInfoCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		F8DB931120B63FFF00DFAB1C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F8287F87209F76550017060E /* FavouriteBuses.swift */,
+				F8C8E287206B26A100520784 /* BusInfo.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F8DB931220B6400600DFAB1C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				F83BE22D2068626A009B4F9D /* ViewController.swift */,
+				F8287F89209FAF920017060E /* FavouritesViewController.swift */,
+				F8DB931520B6501900DFAB1C /* SearchViewController.swift */,
+			);
+			name = Controller;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		F8DB931320B6404D00DFAB1C /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				F89CFD93206DC4A600B9ACC8 /* DataService.swift */,
+				F8E62E2D209E734D00B6505B /* stops.json */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 		FC3388BF361381615703C8ED /* Pods */ = {
@@ -332,8 +377,9 @@
 			files = (
 				F83BE2362068626A009B4F9D /* LaunchScreen.storyboard in Resources */,
 				F83BE2332068626A009B4F9D /* Assets.xcassets in Resources */,
+				F8287F8E209FB76E0017060E /* busInfoCell.xib in Resources */,
 				F83BE2312068626A009B4F9D /* Main.storyboard in Resources */,
-				F83DB98F20802A8D0039E05D /* stops.json in Resources */,
+				F8E62E2F209E73D000B6505B /* stops.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,7 +397,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F83BE2552068626B009B4F9D /* Assets.xcassets in Resources */,
-				F83DB99020802A8D0039E05D /* stops.json in Resources */,
+				F8E62E2E209E734D00B6505B /* stops.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,12 +426,10 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-catchBus/Pods-catchBus-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire-iOS/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON-iOS/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -451,12 +495,10 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-catchBus WatchKit Extension/Pods-catchBus WatchKit Extension-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire-watchOS/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON-watchOS/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -471,7 +513,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8DB931620B6501900DFAB1C /* SearchViewController.swift in Sources */,
+				F8287F8A209FAF920017060E /* FavouritesViewController.swift in Sources */,
 				F83BE22E2068626A009B4F9D /* ViewController.swift in Sources */,
+				F8287F88209F76550017060E /* FavouriteBuses.swift in Sources */,
 				F83BE22C2068626A009B4F9D /* AppDelegate.swift in Sources */,
 				F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */,
 				F87349F4208C301F009E7DD1 /* StopPin.swift in Sources */,
@@ -485,7 +530,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8109FDE2069B2A70064CED7 /* InterfaceController.swift in Sources */,
-				F8C8E28B206C405900520784 /* BusInfo.swift in Sources */,
+				F8DB931420B641D400DFAB1C /* BusInfo.swift in Sources */,
 				F83BE2512068626B009B4F9D /* ExtensionDelegate.swift in Sources */,
 				F8109FDC2069A6E90064CED7 /* rowController.swift in Sources */,
 				F89CFD94206DC4A600B9ACC8 /* DataService.swift in Sources */,
@@ -730,6 +775,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7XS83WMSPL;
 				INFOPLIST_FILE = catchBus/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -746,6 +792,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7XS83WMSPL;
 				INFOPLIST_FILE = catchBus/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus";
 				PRODUCT_NAME = "$(TARGET_NAME)";
