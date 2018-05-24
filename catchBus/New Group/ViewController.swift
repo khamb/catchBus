@@ -65,7 +65,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("ssss")
+
         self.tableActivityViewIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
         self.loadTable(handler: { completed, closestStop in
