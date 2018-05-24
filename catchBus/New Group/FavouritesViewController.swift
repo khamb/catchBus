@@ -28,7 +28,6 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.favouritesTable.reloadData()
-        print(FavouriteBuses.instance.favourites)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

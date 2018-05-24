@@ -10,9 +10,13 @@ import UIKit
 import WatchConnectivity
 import MapKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
  
+    var locationManager = CLLocationManager()
+    let locationAuthorization = CLLocationManager.authorizationStatus()
+    var userCoordinates: CLLocationCoordinate2D!
     
+    let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 70, height: 20))
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var busesTable: UITableView!
@@ -25,6 +29,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //***customize navigation bar
+        navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon")) //title icon
+        
+        //adding right bar item
+        let locIconImageView = UIImageView(image: UIImage(named: "locIcon"))
+        rightLabel.textColor = UIColor.white
+        rightLabel.adjustsFontSizeToFitWidth = true
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: rightLabel), UIBarButtonItem(customView: locIconImageView)]
+        //end of customize navigation bar ***
+        
+        self.locationManager.delegate = self
+        self.initLocationServices()
+        self.userCoordinates = self.locationManager.location?.coordinate
         
         //init mapView
         self.mapView.delegate = self
@@ -47,42 +65,63 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        print("ssss")
         self.tableActivityViewIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
-        self.loadTable(handler: { completed in
+        self.loadTable(handler: { completed, closestStop in
             DispatchQueue.main.async{
+                //update stop name on
+                self.rightLabel.text = closestStop
+                
+                //reloading buses table
                 self.busesTable.reloadData()
                 self.tableActivityViewIndicator.stopAnimating()
                 UIApplication.shared.endIgnoringInteractionEvents()
             }
         })
+        
+
+    }
+    
+    func initLocationServices(){
+        if self.locationAuthorization == .notDetermined{
+            self.locationManager.requestAlwaysAuthorization()
+        } else {
+            return
+        }
+    }
+    
+    func userCoordinatesToString()->String{
+        var latitude = Double(self.userCoordinates.latitude)
+        latitude = floor(pow(10.0, 6) * latitude)/pow(10.0, 6)
+        var longitude = Double(self.userCoordinates.longitude)
+        longitude = floor(pow(10.0, 6) * longitude)/pow(10.0, 6)
+        let toString = String(latitude)+","+String(longitude)
+        return toString
     }
 
     @IBAction func centerBtnPressed(_ sender: Any) {
-        if TabBarViewController.locationAuthorization == .authorizedAlways || TabBarViewController.locationAuthorization == .authorizedWhenInUse{
+        if self.locationAuthorization == .authorizedAlways || self.locationAuthorization == .authorizedWhenInUse{
             self.centerOnUserLocation()
-            //self.loadTable()
         }
     }
 
-     func loadTable(handler: @escaping (_ completed: Bool)->()){
+    func loadTable(handler: @escaping (_ completed: Bool,_ closest: String)->()){
         //first get closest stops' name
-        DataService.instance.getStopName(location: TabBarViewController.userCoordinatesToString(), handler: { closest in
-            
+        DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { closest in
             DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
                 //after that get bus infos from that stop
                 ViewController.stopCode = stopCode
                 DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
                     self.busesData = data
-                    handler(true)
+                    handler(true,closest)
                 })
             })
         })
     }
     
     @objc func refreshTable(){
-        self.loadTable(handler: { complete in
+        self.loadTable(handler: { complete, closest in
             DispatchQueue.main.async {
                 self.busesTable.reloadData()
                 self.tableRefresher.endRefreshing()
@@ -132,7 +171,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 }
 
 
-
 extension ViewController:  WCSessionDelegate{
     
     func initWCSession(){
@@ -163,7 +201,7 @@ extension ViewController:  WCSessionDelegate{
 extension ViewController: MKMapViewDelegate{
     
     func centerOnUserLocation(){
-        if let location = TabBarViewController.locationManager.location?.coordinate{
+        if let location = self.locationManager.location?.coordinate{
             let region = MKCoordinateRegionMakeWithDistance(location, 1000, 1000)
             mapView.setRegion(region, animated: true)
         }

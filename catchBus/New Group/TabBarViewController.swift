@@ -1,4 +1,4 @@
-//
+/*
 //  TabBarViewController.swift
 //  catchBus
 //
@@ -77,4 +77,4 @@ class TabBarViewController: UITabBarController, CLLocationManagerDelegate{
     }
     */
 
-}
+ }*/*/
