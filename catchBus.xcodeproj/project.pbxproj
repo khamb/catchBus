@@ -28,6 +28,7 @@
 		F83BE2552068626B009B4F9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F83BE2542068626B009B4F9D /* Assets.xcassets */; };
 		F87349F4208C301F009E7DD1 /* StopPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87349F3208C301F009E7DD1 /* StopPin.swift */; };
 		F89CFD94206DC4A600B9ACC8 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
+		F8DB931420B641D400DFAB1C /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
 		F8E5CB4B206ECAFE007E5820 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */; };
 		F8E62E2E209E734D00B6505B /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F8E62E2D209E734D00B6505B /* stops.json */; };
 		F8E62E2F209E73D000B6505B /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F8E62E2D209E734D00B6505B /* stops.json */; };
@@ -529,6 +530,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8109FDE2069B2A70064CED7 /* InterfaceController.swift in Sources */,
+				F8DB931420B641D400DFAB1C /* BusInfo.swift in Sources */,
 				F83BE2512068626B009B4F9D /* ExtensionDelegate.swift in Sources */,
 				F8109FDC2069A6E90064CED7 /* rowController.swift in Sources */,
 				F89CFD94206DC4A600B9ACC8 /* DataService.swift in Sources */,
