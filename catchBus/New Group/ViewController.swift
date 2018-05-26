@@ -16,13 +16,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let locationAuthorization = CLLocationManager.authorizationStatus()
     var userCoordinates: CLLocationCoordinate2D!
     
-    let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 70, height: 20))
+    let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 25))
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var busesTable: UITableView!
     var busesData = [BusInfo]()
     var tableRefresher:UIRefreshControl = UIRefreshControl()
-    static var stopCode = ""
+    var stop = Stop(stopNo: "", stopName: "")
     var session: WCSession!
     
     @IBOutlet weak var tableActivityViewIndicator: UIActivityIndicatorView!
@@ -34,10 +34,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon")) //title icon
         
         //adding right bar item
-        let locIconImageView = UIImageView(image: UIImage(named: "locIcon"))
         rightLabel.textColor = UIColor.white
+        rightLabel.adjustsFontForContentSizeCategory = true
+        rightLabel.textAlignment = .right
         rightLabel.adjustsFontSizeToFitWidth = true
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: rightLabel), UIBarButtonItem(customView: locIconImageView)]
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: rightLabel)]
         //end of customize navigation bar ***
         
         self.locationManager.delegate = self
@@ -67,16 +68,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewWillAppear(animated)
 
         self.tableActivityViewIndicator.startAnimating()
-        UIApplication.shared.beginIgnoringInteractionEvents()
         self.loadTable(handler: { completed, closestStop in
             DispatchQueue.main.async{
+   
                 //update stop name on
-                self.rightLabel.text = closestStop
+                self.stop = closestStop
+                self.rightLabel.text = "🚏"+closestStop.stopName
                 
-                //reloading buses table
-                self.busesTable.reloadData()
+                self.busesTable.reloadData() //reloading buses table
                 self.tableActivityViewIndicator.stopAnimating()
-                UIApplication.shared.endIgnoringInteractionEvents()
+
             }
         })
         
@@ -106,18 +107,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
 
-    func loadTable(handler: @escaping (_ completed: Bool,_ closest: String)->()){
-        //first get closest stops' name
-        DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { closest in
-            DataService.instance.getStopNumber(withStopName: closest, handler: { stopCode in
-                //after that get bus infos from that stop
-                ViewController.stopCode = stopCode
-                DataService.instance.getBusInfos(stopCode: stopCode, handler: { (data) in
+    func loadTable(handler: @escaping (_ completed: Bool,_ closest: Stop)->()){
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        //first get closest stops' name45.423317,-75.684485
+        DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
+            
+            DataService.instance.getStopNumber(handler: { completed in
+                DataService.instance.getBusInfos(handler: { (data, stop) in
                     self.busesData = data
-                    handler(true,closest)
+                    handler(true,stop)
                 })
             })
+            
         })
+        UIApplication.shared.endIgnoringInteractionEvents()
+        DataService.instance.reset()
     }
     
     @objc func refreshTable(){
@@ -132,7 +136,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func initTableRefresher(){
         self.busesTable.refreshControl = self.tableRefresher
         self.tableRefresher.addTarget(self, action: #selector(ViewController.self.refreshTable), for: UIControlEvents.valueChanged)
-        self.tableRefresher.attributedTitle = NSAttributedString(string: "updating bus informations ...")
+        self.tableRefresher.attributedTitle = NSAttributedString(string: "updating bus information ...")
        // self.tableRefresher.endRefreshing()
     }
     
@@ -143,8 +147,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let favorite = UIContextualAction(style: .normal, title: "") { (action, view, completed) in
+            let favBus = FavBusInfo(busInfo: self.busesData[indexPath.row], stop: self.stop)
             
-            if FavouriteBuses.instance.addToFavourites(bus: self.busesData[indexPath.row], stopCode: ViewController.stopCode){
+            if FavouriteBuses.instance.addToFavourites(favBus: favBus){
                 let alert = UIAlertController(title: "Add to favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
                 self.present(alert, animated: true, completion: {
                     alert.dismiss(animated: true, completion: nil)

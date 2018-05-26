@@ -17,8 +17,9 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         // Do any additional setup after loading the view.
         //seting up search bar
         self.navigationItem.searchController = UISearchController(searchResultsController: nil)
-        self.navigationItem.searchController?.searchBar.placeholder = "search by stop name..."
-
+        let searchBar = self.navigationItem.searchController?.searchBar
+        searchBar?.placeholder = "search by stop name..."
+        
         
     }
 

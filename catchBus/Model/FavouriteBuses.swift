@@ -12,17 +12,19 @@ import SwiftyJSON
 class FavouriteBuses{
     static let instance = FavouriteBuses()
     
-    private(set) var favourites = [(String,BusInfo)]() //[Int: (BusInfo,Int)] bus.no, BusInfo, stopNumber
+    private(set) var favourites = [FavBusInfo]()
 
-    func addToFavourites(bus: BusInfo, stopCode: String)->Bool{
-        if self.favourites.contains(where: {(key,val) in return val.no==bus.no}) {
+    func addToFavourites(favBus: FavBusInfo)->Bool{
+        let isFavourite = self.favourites.contains(where: { fav in return fav == favBus })
+        if isFavourite{
             return false
+        } else {
+            self.favourites.append(favBus)
+            return true
         }
-        self.favourites.append((stopCode,bus))
-        return true
     }
     
-    func getBusInfo(no: Int, stop: Int){
+    func getFavBusInfo(no: Int, stop: Int){
         let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStop?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&routeNo=\(no)&stopNo=\(stop)"
         let urlRequest = URLRequest(url: URL(string: url)!)
         

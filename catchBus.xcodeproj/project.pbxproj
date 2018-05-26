@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A0271578F7D454F8C1662A0 /* Pods_catchBus_WatchKit_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A4A8A19F061E580A45FA7D7 /* Pods_catchBus_WatchKit_Extension.framework */; };
 		1F2FC423F8B4D9A8455ADA45 /* Pods_catchBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F994D50585B094FACC7787A6 /* Pods_catchBus.framework */; };
-		F8109FDC2069A6E90064CED7 /* rowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8109FDB2069A6E90064CED7 /* rowController.swift */; };
-		F8109FDE2069B2A70064CED7 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83BE24E2068626B009B4F9D /* InterfaceController.swift */; };
 		F8287F88209F76550017060E /* FavouriteBuses.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8287F87209F76550017060E /* FavouriteBuses.swift */; };
 		F8287F8A209FAF920017060E /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8287F89209FAF920017060E /* FavouritesViewController.swift */; };
 		F8287F8E209FB76E0017060E /* busInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F8287F8D209FB76E0017060E /* busInfoCell.xib */; };
@@ -19,60 +16,24 @@
 		F83BE2312068626A009B4F9D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F83BE22F2068626A009B4F9D /* Main.storyboard */; };
 		F83BE2332068626A009B4F9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F83BE2322068626A009B4F9D /* Assets.xcassets */; };
 		F83BE2362068626A009B4F9D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F83BE2342068626A009B4F9D /* LaunchScreen.storyboard */; };
-		F83BE23B2068626A009B4F9D /* catchBus WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = F83BE23A2068626A009B4F9D /* catchBus WatchKit App.app */; };
-		F83BE2412068626A009B4F9D /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F83BE23F2068626A009B4F9D /* Interface.storyboard */; };
-		F83BE2432068626A009B4F9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F83BE2422068626A009B4F9D /* Assets.xcassets */; };
-		F83BE24A2068626B009B4F9D /* catchBus WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F83BE2492068626B009B4F9D /* catchBus WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		F83BE2512068626B009B4F9D /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83BE2502068626B009B4F9D /* ExtensionDelegate.swift */; };
-		F83BE2552068626B009B4F9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F83BE2542068626B009B4F9D /* Assets.xcassets */; };
+		F85EB88120B91159009CC397 /* Stop.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85EB88020B91159009CC397 /* Stop.swift */; };
+		F85EB88620B92785009CC397 /* FavBusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85EB88520B92784009CC397 /* FavBusInfo.swift */; };
 		F87349F4208C301F009E7DD1 /* StopPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87349F3208C301F009E7DD1 /* StopPin.swift */; };
-		F89CFD94206DC4A600B9ACC8 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
-		F8DB931420B641D400DFAB1C /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
 		F8DB931620B6501900DFAB1C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8DB931520B6501900DFAB1C /* SearchViewController.swift */; };
 		F8E5CB4B206ECAFE007E5820 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */; };
-		F8E62E2E209E734D00B6505B /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F8E62E2D209E734D00B6505B /* stops.json */; };
 		F8E62E2F209E73D000B6505B /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F8E62E2D209E734D00B6505B /* stops.json */; };
 		F8F231AD2079CCA800082636 /* busInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F231AC2079CCA800082636 /* busInfoCell.swift */; };
 		F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
 		F8F231AF2079CFD000082636 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		F83BE23C2068626A009B4F9D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F83BE2202068626A009B4F9D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F83BE2392068626A009B4F9D;
-			remoteInfo = "catchBus WatchKit App";
-		};
-		F83BE24B2068626B009B4F9D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F83BE2202068626A009B4F9D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F83BE2482068626B009B4F9D;
-			remoteInfo = "catchBus WatchKit Extension";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
-		F83BE25D2068626B009B4F9D /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				F83BE24A2068626B009B4F9D /* catchBus WatchKit Extension.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		F83BE2612068626B009B4F9D /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				F83BE23B2068626A009B4F9D /* catchBus WatchKit App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,7 +46,6 @@
 		56D8E80961207400ED159CA5 /* Pods-catchBus WatchKit Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-catchBus WatchKit Extension.release.xcconfig"; path = "Pods/Target Support Files/Pods-catchBus WatchKit Extension/Pods-catchBus WatchKit Extension.release.xcconfig"; sourceTree = "<group>"; };
 		7F1743301390B5AA57724506 /* Pods-catchBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-catchBus.release.xcconfig"; path = "Pods/Target Support Files/Pods-catchBus/Pods-catchBus.release.xcconfig"; sourceTree = "<group>"; };
 		84F63A1C1DDD1CD4A72B26A2 /* Pods-catchBus WatchKit Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-catchBus WatchKit Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-catchBus WatchKit Extension/Pods-catchBus WatchKit Extension.debug.xcconfig"; sourceTree = "<group>"; };
-		F8109FDB2069A6E90064CED7 /* rowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rowController.swift; sourceTree = "<group>"; };
 		F8287F87209F76550017060E /* FavouriteBuses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteBuses.swift; sourceTree = "<group>"; };
 		F8287F89209FAF920017060E /* FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		F8287F8D209FB76E0017060E /* busInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = busInfoCell.xib; sourceTree = "<group>"; };
@@ -96,15 +56,8 @@
 		F83BE2322068626A009B4F9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F83BE2352068626A009B4F9D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F83BE2372068626A009B4F9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F83BE23A2068626A009B4F9D /* catchBus WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "catchBus WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F83BE2402068626A009B4F9D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
-		F83BE2422068626A009B4F9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F83BE2442068626A009B4F9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F83BE2492068626B009B4F9D /* catchBus WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "catchBus WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F83BE24E2068626B009B4F9D /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
-		F83BE2502068626B009B4F9D /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
-		F83BE2542068626B009B4F9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F83BE2562068626B009B4F9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F85EB88020B91159009CC397 /* Stop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stop.swift; sourceTree = "<group>"; };
+		F85EB88520B92784009CC397 /* FavBusInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavBusInfo.swift; sourceTree = "<group>"; };
 		F87349F3208C301F009E7DD1 /* StopPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopPin.swift; sourceTree = "<group>"; };
 		F89CFD93206DC4A600B9ACC8 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		F8C8E287206B26A100520784 /* BusInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusInfo.swift; sourceTree = "<group>"; };
@@ -116,27 +69,12 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		9F7C6BCC7F16D225212C31E4 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		F83BE2252068626A009B4F9D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				F8E5CB4B206ECAFE007E5820 /* CoreLocation.framework in Frameworks */,
 				1F2FC423F8B4D9A8455ADA45 /* Pods_catchBus.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F83BE2462068626B009B4F9D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0A0271578F7D454F8C1662A0 /* Pods_catchBus_WatchKit_Extension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,8 +95,6 @@
 			isa = PBXGroup;
 			children = (
 				F83BE22A2068626A009B4F9D /* catchBus */,
-				F83BE23E2068626A009B4F9D /* catchBus WatchKit App */,
-				F83BE24D2068626B009B4F9D /* catchBus WatchKit Extension */,
 				F83BE2292068626A009B4F9D /* Products */,
 				FC3388BF361381615703C8ED /* Pods */,
 				CF2BE93EB3387662F963C740 /* Frameworks */,
@@ -169,8 +105,6 @@
 			isa = PBXGroup;
 			children = (
 				F83BE2282068626A009B4F9D /* catchBus.app */,
-				F83BE23A2068626A009B4F9D /* catchBus WatchKit App.app */,
-				F83BE2492068626B009B4F9D /* catchBus WatchKit Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -191,28 +125,6 @@
 			path = catchBus;
 			sourceTree = "<group>";
 		};
-		F83BE23E2068626A009B4F9D /* catchBus WatchKit App */ = {
-			isa = PBXGroup;
-			children = (
-				F83BE23F2068626A009B4F9D /* Interface.storyboard */,
-				F83BE2422068626A009B4F9D /* Assets.xcassets */,
-				F83BE2442068626A009B4F9D /* Info.plist */,
-			);
-			path = "catchBus WatchKit App";
-			sourceTree = "<group>";
-		};
-		F83BE24D2068626B009B4F9D /* catchBus WatchKit Extension */ = {
-			isa = PBXGroup;
-			children = (
-				F83BE24E2068626B009B4F9D /* InterfaceController.swift */,
-				F83BE2502068626B009B4F9D /* ExtensionDelegate.swift */,
-				F83BE2542068626B009B4F9D /* Assets.xcassets */,
-				F83BE2562068626B009B4F9D /* Info.plist */,
-				F8109FDB2069A6E90064CED7 /* rowController.swift */,
-			);
-			path = "catchBus WatchKit Extension";
-			sourceTree = "<group>";
-		};
 		F8DB931020B63FF900DFAB1C /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +140,8 @@
 			children = (
 				F8287F87209F76550017060E /* FavouriteBuses.swift */,
 				F8C8E287206B26A100520784 /* BusInfo.swift */,
+				F85EB88020B91159009CC397 /* Stop.swift */,
+				F85EB88520B92784009CC397 /* FavBusInfo.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -281,50 +195,11 @@
 			buildRules = (
 			);
 			dependencies = (
-				F83BE23D2068626A009B4F9D /* PBXTargetDependency */,
 			);
 			name = catchBus;
 			productName = catchBus;
 			productReference = F83BE2282068626A009B4F9D /* catchBus.app */;
 			productType = "com.apple.product-type.application";
-		};
-		F83BE2392068626A009B4F9D /* catchBus WatchKit App */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F83BE25E2068626B009B4F9D /* Build configuration list for PBXNativeTarget "catchBus WatchKit App" */;
-			buildPhases = (
-				F83BE2382068626A009B4F9D /* Resources */,
-				F83BE25D2068626B009B4F9D /* Embed App Extensions */,
-				9F7C6BCC7F16D225212C31E4 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F83BE24C2068626B009B4F9D /* PBXTargetDependency */,
-			);
-			name = "catchBus WatchKit App";
-			productName = "catchBus WatchKit App";
-			productReference = F83BE23A2068626A009B4F9D /* catchBus WatchKit App.app */;
-			productType = "com.apple.product-type.application.watchapp2";
-		};
-		F83BE2482068626B009B4F9D /* catchBus WatchKit Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F83BE25A2068626B009B4F9D /* Build configuration list for PBXNativeTarget "catchBus WatchKit Extension" */;
-			buildPhases = (
-				8A89149FDFF36C04FE7B3AE1 /* [CP] Check Pods Manifest.lock */,
-				F83BE2452068626B009B4F9D /* Sources */,
-				F83BE2462068626B009B4F9D /* Frameworks */,
-				F83BE2472068626B009B4F9D /* Resources */,
-				CFBD37E9EAAB9E842A7D0DAE /* [CP] Embed Pods Frameworks */,
-				0A59C6ABEAEEFA1038A8635A /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "catchBus WatchKit Extension";
-			productName = "catchBus WatchKit Extension";
-			productReference = F83BE2492068626B009B4F9D /* catchBus WatchKit Extension.appex */;
-			productType = "com.apple.product-type.watchkit2-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -337,14 +212,6 @@
 				ORGANIZATIONNAME = "Khadim Mbaye";
 				TargetAttributes = {
 					F83BE2272068626A009B4F9D = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
-					};
-					F83BE2392068626A009B4F9D = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
-					};
-					F83BE2482068626B009B4F9D = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
@@ -364,8 +231,6 @@
 			projectRoot = "";
 			targets = (
 				F83BE2272068626A009B4F9D /* catchBus */,
-				F83BE2392068626A009B4F9D /* catchBus WatchKit App */,
-				F83BE2482068626B009B4F9D /* catchBus WatchKit Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -383,42 +248,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F83BE2382068626A009B4F9D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F83BE2432068626A009B4F9D /* Assets.xcassets in Resources */,
-				F83BE2412068626A009B4F9D /* Interface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F83BE2472068626B009B4F9D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F83BE2552068626B009B4F9D /* Assets.xcassets in Resources */,
-				F8E62E2E209E734D00B6505B /* stops.json in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0A59C6ABEAEEFA1038A8635A /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-catchBus WatchKit Extension/Pods-catchBus WatchKit Extension-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		1C5A256FE345E4B0CF2C1737 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -435,24 +267,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-catchBus/Pods-catchBus-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8A89149FDFF36C04FE7B3AE1 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-catchBus WatchKit Extension-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		952C5A6BDB2FA8F897EB5F30 /* [CP] Copy Pods Resources */ = {
@@ -488,24 +302,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CFBD37E9EAAB9E842A7D0DAE /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-catchBus WatchKit Extension/Pods-catchBus WatchKit Extension-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/SwiftyJSON-watchOS/SwiftyJSON.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-catchBus WatchKit Extension/Pods-catchBus WatchKit Extension-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -515,42 +311,19 @@
 			files = (
 				F8DB931620B6501900DFAB1C /* SearchViewController.swift in Sources */,
 				F8287F8A209FAF920017060E /* FavouritesViewController.swift in Sources */,
+				F85EB88620B92785009CC397 /* FavBusInfo.swift in Sources */,
 				F83BE22E2068626A009B4F9D /* ViewController.swift in Sources */,
 				F8287F88209F76550017060E /* FavouriteBuses.swift in Sources */,
 				F83BE22C2068626A009B4F9D /* AppDelegate.swift in Sources */,
 				F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */,
 				F87349F4208C301F009E7DD1 /* StopPin.swift in Sources */,
+				F85EB88120B91159009CC397 /* Stop.swift in Sources */,
 				F8F231AD2079CCA800082636 /* busInfoCell.swift in Sources */,
 				F8F231AF2079CFD000082636 /* DataService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F83BE2452068626B009B4F9D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F8109FDE2069B2A70064CED7 /* InterfaceController.swift in Sources */,
-				F8DB931420B641D400DFAB1C /* BusInfo.swift in Sources */,
-				F83BE2512068626B009B4F9D /* ExtensionDelegate.swift in Sources */,
-				F8109FDC2069A6E90064CED7 /* rowController.swift in Sources */,
-				F89CFD94206DC4A600B9ACC8 /* DataService.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		F83BE23D2068626A009B4F9D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F83BE2392068626A009B4F9D /* catchBus WatchKit App */;
-			targetProxy = F83BE23C2068626A009B4F9D /* PBXContainerItemProxy */;
-		};
-		F83BE24C2068626B009B4F9D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F83BE2482068626B009B4F9D /* catchBus WatchKit Extension */;
-			targetProxy = F83BE24B2068626B009B4F9D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F83BE22F2068626A009B4F9D /* Main.storyboard */ = {
@@ -567,14 +340,6 @@
 				F83BE2352068626A009B4F9D /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		F83BE23F2068626A009B4F9D /* Interface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F83BE2402068626A009B4F9D /* Base */,
-			);
-			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -691,82 +456,6 @@
 			};
 			name = Release;
 		};
-		F83BE25B2068626B009B4F9D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 84F63A1C1DDD1CD4A72B26A2 /* Pods-catchBus WatchKit Extension.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7XS83WMSPL;
-				INFOPLIST_FILE = "catchBus WatchKit Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus.watchkitapp.watchkitextension";
-				PRODUCT_NAME = "${TARGET_NAME}";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.3;
-			};
-			name = Debug;
-		};
-		F83BE25C2068626B009B4F9D /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 56D8E80961207400ED159CA5 /* Pods-catchBus WatchKit Extension.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7XS83WMSPL;
-				INFOPLIST_FILE = "catchBus WatchKit Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus.watchkitapp.watchkitextension";
-				PRODUCT_NAME = "${TARGET_NAME}";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.3;
-			};
-			name = Release;
-		};
-		F83BE25F2068626B009B4F9D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7XS83WMSPL;
-				IBSC_MODULE = catchBus_WatchKit_Extension;
-				INFOPLIST_FILE = "catchBus WatchKit App/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus.watchkitapp";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.3;
-			};
-			name = Debug;
-		};
-		F83BE2602068626B009B4F9D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7XS83WMSPL;
-				IBSC_MODULE = catchBus_WatchKit_Extension;
-				INFOPLIST_FILE = "catchBus WatchKit App/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "Khadim-Mbaye.catchBus.watchkitapp";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.3;
-			};
-			name = Release;
-		};
 		F83BE2632068626B009B4F9D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1632AAE689B614BD350E4634 /* Pods-catchBus.debug.xcconfig */;
@@ -809,24 +498,6 @@
 			buildConfigurations = (
 				F83BE2582068626B009B4F9D /* Debug */,
 				F83BE2592068626B009B4F9D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F83BE25A2068626B009B4F9D /* Build configuration list for PBXNativeTarget "catchBus WatchKit Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F83BE25B2068626B009B4F9D /* Debug */,
-				F83BE25C2068626B009B4F9D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F83BE25E2068626B009B4F9D /* Build configuration list for PBXNativeTarget "catchBus WatchKit App" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F83BE25F2068626B009B4F9D /* Debug */,
-				F83BE2602068626B009B4F9D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
