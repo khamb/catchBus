@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct BusInfo {
+class BusInfo {
     var no: String!
     var routeHeading: String!
     var time: String!
@@ -19,7 +19,5 @@ struct BusInfo {
         self.time = time
     }
     
-    static func !=(left: BusInfo, right: BusInfo)->Bool{
-        return left.no == right.no
-    }
+
 }
