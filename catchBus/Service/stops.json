@@ -2436,10 +2436,6 @@
             "stop_name": "LAURIER / KING EDWARD"
         },
         {
-            "stop_code": "",
-            "stop_name": "LAURIER / CUMBERLAND"
-        },
-        {
             "stop_code": 6819,
             "stop_name": "LAURIER / CUMBERLAND"
         },
@@ -7454,10 +7450,6 @@
         {
             "stop_code": 8139,
             "stop_name": "FERN CASEY / LOCUST"
-        },
-        {
-            "stop_code": "",
-            "stop_name": "C.C MER BLEUE"
         },
         {
             "stop_code": 8596,
@@ -18444,10 +18436,6 @@
             "stop_name": "WOODRIDGE / BAYSHORE"
         },
         {
-            "stop_code": "",
-            "stop_name": "HOLLY ACRES / RAMP"
-        },
-        {
             "stop_code": 2869,
             "stop_name": "ACRES / RICHMOND"
         },
@@ -19419,10 +19407,7 @@
             "stop_code": 1296,
             "stop_name": "KANATA / WALDEN"
         },
-        {
-            "stop_code": "",
-            "stop_name": "RICHARDSON / ALL SAINTS H.S."
-        },
+
         {
             "stop_code": 1298,
             "stop_name": "KANATA / KEYROCK"
@@ -20910,10 +20895,6 @@
         {
             "stop_code": 3237,
             "stop_name": "HOPE SIDE / ACCEPTANCE"
-        },
-        {
-            "stop_code": "",
-            "stop_name": "CANADIAN TIRE CENTRE"
         },
         {
             "stop_code": 1109,

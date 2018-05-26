@@ -109,8 +109,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     func loadTable(handler: @escaping (_ completed: Bool,_ closest: Stop)->()){
         UIApplication.shared.beginIgnoringInteractionEvents()
-        //first get closest stops' name45.423317,-75.684485
-        DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
+        //first get closest stops' name45.422923, -75.681740
+        DataService.instance.getStopName(location: "45.419849,-75.678814", handler: { finished in
             
             DataService.instance.getStopNumber(handler: { completed in
                 DataService.instance.getBusInfos(handler: { (data, stop) in

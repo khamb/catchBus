@@ -20,15 +20,18 @@ class DataService{
     private(set) var closestStops = [Stop]()
     
     func getBusInfos(handler: @escaping (_ busInfo: [BusInfo], _ stop: Stop) -> ()){
-           
+        var buses = [BusInfo]()
+        
         for stop in self.closestStops{
-            var buses = [BusInfo]()
-            let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStopAllRoutes?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&stopNo="+stop.stopNo+"&format=json"
             
+            let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStopAllRoutes?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&stopNo="+stop.stopNo+"&format=json"
+
             let session = URLSession.shared
             
             //making a request to OC transpo API to get bus informations
+  
             let apiTask = session.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) in
+  
                 if error == nil{
                     
                     var routeNo: String!
@@ -39,12 +42,7 @@ class DataService{
                     let jsonResponse = JSON(data!)
                     
                     let routes = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].arrayValue
-                    print("\(stop.stopName!)")
-                    if routes.isEmpty{ //meaning if no bus is available at that stop go to the nest stop
-                        print("\(stop.stopName!) has no bus on service right now!")
-                        return
-                    }
-
+                    
                     for route in routes{
                         routeNo = route["RouteNo"].stringValue
                         routeHeading = route["RouteHeading"].stringValue
@@ -60,6 +58,7 @@ class DataService{
                 } else {
                     print(error.debugDescription)
                 }
+
                 //filter buses out of service
                 buses = buses.filter({bus in
                     return bus.time != "-"
@@ -69,13 +68,18 @@ class DataService{
                 buses.sort(by: {(bus1, bus2) in
                     return Int(bus1.time)! < Int(bus2.time)!
                 })
+                print("\(buses.count) , \(stop)")
                 handler(buses,stop)
             })
-            apiTask.resume()// end of API call
+            apiTask.resume() // end of API call
         }
+        
         
     }
     
+    func makeApiCall(){
+        
+    }
     
     /*get stop number from json file
      */
@@ -93,7 +97,6 @@ class DataService{
                         // Do something you want
                         if stop["stop_name"].stringValue == stopName{
                             self.closestStops.append(Stop(stopNo: stop["stop_code"].stringValue, stopName: stopName))
-                            break
                         }
                     }
                 }
@@ -120,9 +123,7 @@ class DataService{
             if error == nil{
                 let jsonResponse = JSON(data!)
                 //get closestbus stops
-                for i in 0..<jsonResponse["results"].count{ //get 3 closest stops
-                    self.closestStopsNames.append(jsonResponse["results"][i]["name"].stringValue.uppercased())
-                }
+                self.closestStopsNames.append(jsonResponse["results"][0]["name"].stringValue.uppercased())
                 handler(true)
                 
             } else {
