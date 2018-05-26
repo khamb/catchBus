@@ -9,6 +9,7 @@
 import UIKit
 import WatchConnectivity
 import MapKit
+import SwiftyJSON
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
  
@@ -16,13 +17,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let locationAuthorization = CLLocationManager.authorizationStatus()
     var userCoordinates: CLLocationCoordinate2D!
     
-    let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 25))
+    let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 30))
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var busesTable: UITableView!
     var busesData = [BusInfo]()
     var tableRefresher:UIRefreshControl = UIRefreshControl()
     var stop = Stop(stopNo: "", stopName: "")
+    static var allStops = [Stop]()
     var session: WCSession!
     
     @IBOutlet weak var tableActivityViewIndicator: UIActivityIndicatorView!
@@ -57,6 +59,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.busesTable.register(UINib(nibName: "busInfoCell", bundle: nil), forCellReuseIdentifier: "busInfoCellIdentifier")
         
         self.initTableRefresher()
+        
+        //populate stops array
+        self.initAllStopsArray()
+        print(ViewController.allStops.count)
     }
 
     override func didReceiveMemoryWarning() {
@@ -67,20 +73,52 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.tableActivityViewIndicator.startAnimating()
-        self.loadTable(handler: { completed, closestStop in
-            DispatchQueue.main.async{
-   
-                //update stop name on
-                self.stop = closestStop
-                self.rightLabel.text = "🚏"+closestStop.stopName
-                
-                self.busesTable.reloadData() //reloading buses table
-                self.tableActivityViewIndicator.stopAnimating()
 
+        self.loadTable(handler: { completed, closestStop in
+            if completed{
+                DispatchQueue.main.async{
+                    self.tableActivityViewIndicator.startAnimating()
+                    //update stop name on
+                    self.stop = closestStop
+                    self.rightLabel.text = "🚏"+closestStop.stopName
+                    
+                    self.busesTable.reloadData() //reloading buses table
+                    self.tableActivityViewIndicator.stopAnimating()
+                    
+                }
+            } else{
+                DispatchQueue.main.async {
+                    
+                    self.rightLabel.text = "🚏"+closestStop.stopName
+                    
+                    let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
+    
+                    noBusLabel.text = "❌ No bus Available at this stop right now❗️"
+                    noBusLabel.adjustsFontSizeToFitWidth = true
+                    noBusLabel.textAlignment = .center
+                    noBusLabel.center.x = self.busesTable.center.x
+                    noBusLabel.center.y = self.busesTable.center.y-30
+                    self.tableActivityViewIndicator.removeFromSuperview()
+                    self.view.addSubview(noBusLabel)
+                }
             }
+
         })
         
+
+    }
+    
+    private func initAllStopsArray(){
+        let path = Bundle.main.url(forResource: "stops", withExtension: "json")
+        let data = try! Data(contentsOf: path!)
+        let json = JSON(data)
+        if !json["stops"].isEmpty{
+            for stop in json["stops"].arrayValue{
+                ViewController.allStops.append(Stop(stopNo: stop["stop_code"].stringValue, stopName: stop["stop_name"].stringValue))
+            }
+        } else {
+            print("error parsing stops.json ...")
+        }
 
     }
     
@@ -110,12 +148,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func loadTable(handler: @escaping (_ completed: Bool,_ closest: Stop)->()){
         UIApplication.shared.beginIgnoringInteractionEvents()
         //first get closest stops' name45.422923, -75.681740
-        DataService.instance.getStopName(location: "45.419849,-75.678814", handler: { finished in
+        DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
             
             DataService.instance.getStopNumber(handler: { completed in
                 DataService.instance.getBusInfos(handler: { (data, stop) in
-                    self.busesData = data
-                    handler(true,stop)
+                    if !data.isEmpty{
+                        self.busesData = data
+                        handler(true,stop)
+                    } else{
+                        handler(false,stop)
+                    }
+
                 })
             })
             

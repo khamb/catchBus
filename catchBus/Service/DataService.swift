@@ -16,7 +16,7 @@ class DataService{
     /* function to get all buses infos around
      */
     
-    private(set) var closestStopsNames = [String]()
+    private(set) var closestStopsName = ""
     private(set) var closestStops = [Stop]()
     
     func getBusInfos(handler: @escaping (_ busInfo: [BusInfo], _ stop: Stop) -> ()){
@@ -29,7 +29,6 @@ class DataService{
             let session = URLSession.shared
             
             //making a request to OC transpo API to get bus informations
-  
             let apiTask = session.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) in
   
                 if error == nil{
@@ -68,7 +67,7 @@ class DataService{
                 buses.sort(by: {(bus1, bus2) in
                     return Int(bus1.time)! < Int(bus2.time)!
                 })
-                print("\(buses.count) , \(stop)")
+
                 handler(buses,stop)
             })
             apiTask.resume() // end of API call
@@ -85,28 +84,18 @@ class DataService{
      */
     func getStopNumber(handler: @escaping (_ completed: Bool) -> ()){
         
-        let path = Bundle.main.path(forResource: "stops", ofType: "json")
-        let url = URL(fileURLWithPath: path!)
-        
-        URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-            if error == nil{
-                let jsonResult = JSON(data!)
-                let data = jsonResult["stops"].arrayValue
-                for stopName in self.closestStopsNames{
-                    for stop in data {
-                        // Do something you want
-                        if stop["stop_name"].stringValue == stopName{
-                            self.closestStops.append(Stop(stopNo: stop["stop_code"].stringValue, stopName: stopName))
-                        }
-                    }
+        if !ViewController.allStops.isEmpty{
+            for stop in ViewController.allStops{
+                if stop.stopName == self.closestStopsName{
+                    self.closestStops.append(stop)
                 }
-                handler(true)
-
-            } else{
-                print("error getting stop number: \n"+error.debugDescription)
-                handler(false)
             }
-        }).resume() // end of api call
+            handler(true)
+        } else{
+            print("error getting stop number: all stops array is empty !")
+            handler(false)
+        }
+
     }// end of getStopNumber
     
     
@@ -123,7 +112,7 @@ class DataService{
             if error == nil{
                 let jsonResponse = JSON(data!)
                 //get closestbus stops
-                self.closestStopsNames.append(jsonResponse["results"][0]["name"].stringValue.uppercased())
+                self.closestStopsName = jsonResponse["results"][0]["name"].stringValue.uppercased()
                 handler(true)
                 
             } else {
@@ -136,7 +125,7 @@ class DataService{
     
     func reset(){
         self.closestStops = []
-        self.closestStopsNames = []
+        self.closestStopsName = ""
     }
     
     
