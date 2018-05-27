@@ -62,7 +62,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //populate stops array
         self.initAllStopsArray()
-        print(ViewController.allStops.count)
+        
     }
 
     override func didReceiveMemoryWarning() {

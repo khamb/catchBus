@@ -231,6 +231,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="stopLabel" destination="QIJ-fw-msZ" id="I7N-F9-QqP"/>
+                                            <segue destination="9uR-na-a1f" kind="show" identifier="StopDetailSegue" id="bFX-CJ-LsY"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -263,6 +264,46 @@
                 </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="3072.8000000000002" y="876.61169415292363"/>
+        </scene>
+        <!--Stop Details View Controller-->
+        <scene sceneID="63O-6s-SlB">
+            <objects>
+                <viewController id="9uR-na-a1f" customClass="StopDetailsViewController" customModule="catchBus" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mJz-oC-wPv">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="JKB-SU-R0m">
+                                <rect key="frame" x="0.0" y="116" width="375" height="551"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="55" id="5TM-zJ-x7F" customClass="busInfoCell" customModule="catchBus" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="55"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5TM-zJ-x7F" id="Id0-76-fx5">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="55"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="JKB-SU-R0m" secondAttribute="bottom" id="aQW-tS-Nl3"/>
+                            <constraint firstItem="JKB-SU-R0m" firstAttribute="trailing" secondItem="esc-DA-Vyz" secondAttribute="trailing" id="bJr-Y8-EQY"/>
+                            <constraint firstItem="JKB-SU-R0m" firstAttribute="top" secondItem="esc-DA-Vyz" secondAttribute="top" id="tUZ-F7-jZY"/>
+                            <constraint firstItem="JKB-SU-R0m" firstAttribute="leading" secondItem="esc-DA-Vyz" secondAttribute="leading" id="z1q-QT-tev"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="esc-DA-Vyz"/>
+                    </view>
+                    <connections>
+                        <outlet property="stopDetailTable" destination="JKB-SU-R0m" id="ZTk-cK-nTa"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kZY-Zq-Nzp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4064.8000000000002" y="876.61169415292363"/>
         </scene>
         <!--Help-->
         <scene sceneID="R7g-h5-e81">

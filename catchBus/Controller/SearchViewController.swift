@@ -12,8 +12,9 @@ import SwiftyJSON
 class SearchViewController: UIViewController, UISearchBarDelegate {
     
     @IBOutlet weak var stopsTable: UITableView!
-    
-    let searController = UISearchController(searchResultsController: nil)
+    let searchController = UISearchController(searchResultsController: nil)
+    var searchBar = UISearchBar()
+    var filteredStops = [Stop]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,11 +26,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         //init rowHeight
         self.stopsTable.rowHeight = 50
         
-        //embedding search bar in navigation bar
-        self.navigationItem.searchController = self.searController
-        let searchBar = self.navigationItem.searchController?.searchBar
-        searchBar?.delegate = self
-        searchBar?.placeholder = "search by stop name..."
+        //embedding search bar in navigation bar and initialize it
+        self.initSearchBar()
         
     }
     
@@ -44,34 +42,62 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    func initSearchBar(){
+        self.searchController.obscuresBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        self.navigationItem.searchController = self.searchController
+        self.searchBar = (self.navigationItem.searchController?.searchBar)!
+        //self.searchController.hidesNavigationBarDuringPresentation = false
+        self.searchBar.delegate = self
+        self.searchBar.placeholder = "search by stop name..."
+    }
+    
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
+        if !(self.searchController.searchBar.text?.isEmpty)!{
+            self.filteredStops = ViewController.allStops.filter({ stop in
+                return stop.stopName.contains(searchText.uppercased())
+            })
+            self.stopsTable.reloadData()
+        }
     }
     
 
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        guard let stopDetailVC = segue.destination as? StopDetailsViewController else {return}
+        guard let cellSender = sender as? StopCell else {return}
+        
+        if let index = self.stopsTable.indexPath(for: cellSender){
+            stopDetailVC.currentStop = ViewController.allStops[index.row]
+        }
+        
     }
-    */
+    
 }
 
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ViewController.allStops.count
+        if (self.searchBar.text?.isEmpty)!{
+            return ViewController.allStops.count
+        }
+        return self.filteredStops.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let stopCell = tableView.dequeueReusableCell(withIdentifier: "StopCell") as? StopCell else {return UITableViewCell()}
-        stopCell.initCell(stop: ViewController.allStops[indexPath.row])
+        
+        if (self.searchController.searchBar.text?.isEmpty)!{
+            stopCell.initCell(stop: ViewController.allStops[indexPath.row])
+        } else {
+            stopCell.initCell(stop: self.filteredStops[indexPath.row])
+        }
+
         return stopCell
     }
-    
     
 }
 

@@ -26,6 +26,7 @@
 		F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
 		F8F231AF2079CFD000082636 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
 		F8FAA6E520BA19B800DD5784 /* StopCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FAA6E420BA19B800DD5784 /* StopCell.swift */; };
+		F8FAA6E720BA2C2100DD5784 /* StopDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FAA6E620BA2C2100DD5784 /* StopDetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -67,6 +68,7 @@
 		F8E62E2D209E734D00B6505B /* stops.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stops.json; sourceTree = "<group>"; };
 		F8F231AC2079CCA800082636 /* busInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = busInfoCell.swift; sourceTree = "<group>"; };
 		F8FAA6E420BA19B800DD5784 /* StopCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopCell.swift; sourceTree = "<group>"; };
+		F8FAA6E620BA2C2100DD5784 /* StopDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopDetailsViewController.swift; sourceTree = "<group>"; };
 		F994D50585B094FACC7787A6 /* Pods_catchBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_catchBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -155,6 +157,7 @@
 				F83BE22D2068626A009B4F9D /* ViewController.swift */,
 				F8287F89209FAF920017060E /* FavouritesViewController.swift */,
 				F8DB931520B6501900DFAB1C /* SearchViewController.swift */,
+				F8FAA6E620BA2C2100DD5784 /* StopDetailsViewController.swift */,
 			);
 			name = Controller;
 			path = "New Group";
@@ -316,6 +319,7 @@
 				F8287F8A209FAF920017060E /* FavouritesViewController.swift in Sources */,
 				F85EB88620B92785009CC397 /* FavBusInfo.swift in Sources */,
 				F83BE22E2068626A009B4F9D /* ViewController.swift in Sources */,
+				F8FAA6E720BA2C2100DD5784 /* StopDetailsViewController.swift in Sources */,
 				F8287F88209F76550017060E /* FavouriteBuses.swift in Sources */,
 				F83BE22C2068626A009B4F9D /* AppDelegate.swift in Sources */,
 				F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */,
