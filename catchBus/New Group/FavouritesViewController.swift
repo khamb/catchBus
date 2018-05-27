@@ -18,6 +18,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         self.favouritesTable.delegate = self
         self.favouritesTable.dataSource = self
         self.favouritesTable.rowHeight = 70
+        print(FavouriteBuses.instance.favourites)
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,14 +42,27 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         cell.initRow(busInfo: bus)
         return cell
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "Delete", handler: { action, view, completed in
+            
+            let favBus = FavouriteBuses.instance.favourites[indexPath.row] 
+            
+            if FavouriteBuses.instance.removeFromFavourites(favBus: favBus){
+                let successAlert = UIAlertController(title: "Removed frm favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
+                self.present(successAlert, animated: true, completion: {
+                    successAlert.dismiss(animated: true, completion: nil)
+                })
+                completed(true)
+            } else {
+                let failAlert = UIAlertController(title: "Removed frm favourites", message: "❌  UNSUCCESSFULL!", preferredStyle: .alert)
+                self.present(failAlert, animated: true, completion: {
+                    failAlert.dismiss(animated: true, completion: nil)
+                })
+                completed(false)
+            }
+        })
+        return UISwipeActionsConfiguration(actions: [delete])
     }
-    */
 
 }

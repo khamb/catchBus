@@ -199,7 +199,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 })
                 completed(true)
             } else {
-                let alert = UIAlertController(title: "Add to favourites", message: "❌ ALREADY IN FAVOURITES!", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Add to favourites", message: "❌ ALREADY IN YOUR FAVOURITES!", preferredStyle: .alert)
                 self.present(alert, animated: true, completion: {
                     alert.dismiss(animated: true, completion: nil)
                 })

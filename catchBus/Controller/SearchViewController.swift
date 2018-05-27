@@ -71,7 +71,12 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         guard let cellSender = sender as? StopCell else {return}
         
         if let index = self.stopsTable.indexPath(for: cellSender){
-            stopDetailVC.currentStop = ViewController.allStops[index.row]
+            if (self.searchBar.text?.isEmpty)!{
+                stopDetailVC.currentStop = ViewController.allStops[index.row]
+            } else {
+                stopDetailVC.currentStop = self.filteredStops[index.row]
+            }
+
         }
         
     }
