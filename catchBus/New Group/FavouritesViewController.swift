@@ -11,6 +11,7 @@ import UIKit
 class FavouritesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var favouritesTable: UITableView!
+    let noFavLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +19,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         self.favouritesTable.delegate = self
         self.favouritesTable.dataSource = self
         self.favouritesTable.rowHeight = 70
-        print(FavouriteBuses.instance.favourites)
+ 
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,7 +29,22 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.favouritesTable.reloadData()
+        
+        if FavouriteBuses.instance.favourites.isEmpty{
+            if self.noFavLabel.isHidden{
+                self.noFavLabel.isHidden = false
+            }
+            noFavLabel.text = "❌ No bus Available at this stop right now❗️"
+            noFavLabel.adjustsFontSizeToFitWidth = true
+            noFavLabel.textAlignment = .center
+            noFavLabel.center.x = self.view.center.x
+            noFavLabel.center.y = self.view.center.y-30
+            self.view.addSubview(noFavLabel)
+        } else {
+            self.noFavLabel.isHidden = true
+            self.favouritesTable.reloadData()
+        }
+
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -47,19 +63,14 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         let delete = UIContextualAction(style: .destructive, title: "Delete", handler: { action, view, completed in
             
             let favBus = FavouriteBuses.instance.favourites[indexPath.row] 
-            
+
             if FavouriteBuses.instance.removeFromFavourites(favBus: favBus){
+                tableView.deleteRows(at: [indexPath], with: .automatic)
                 let successAlert = UIAlertController(title: "Removed frm favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
                 self.present(successAlert, animated: true, completion: {
                     successAlert.dismiss(animated: true, completion: nil)
                 })
                 completed(true)
-            } else {
-                let failAlert = UIAlertController(title: "Removed frm favourites", message: "❌  UNSUCCESSFULL!", preferredStyle: .alert)
-                self.present(failAlert, animated: true, completion: {
-                    failAlert.dismiss(animated: true, completion: nil)
-                })
-                completed(false)
             }
         })
         return UISwipeActionsConfiguration(actions: [delete])

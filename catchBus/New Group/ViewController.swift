@@ -18,6 +18,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var userCoordinates: CLLocationCoordinate2D!
     
     let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 30))
+    let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var busesTable: UITableView!
@@ -77,6 +78,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.loadTable(handler: { completed, closestStop in
             if completed{
                 DispatchQueue.main.async{
+                    if !self.noBusLabel.isHidden{
+                        self.noBusLabel.isHidden = true
+                    }
+                    
                     self.tableActivityViewIndicator.startAnimating()
                     //update stop name on
                     self.stop = closestStop
@@ -84,22 +89,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     
                     self.busesTable.reloadData() //reloading buses table
                     self.tableActivityViewIndicator.stopAnimating()
-                    
                 }
             } else{
                 DispatchQueue.main.async {
+                    self.tableActivityViewIndicator.removeFromSuperview()
+                    
+                    self.noBusLabel.isHidden = false
                     
                     self.rightLabel.text = "🚏"+closestStop.stopName
                     
-                    let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
-    
-                    noBusLabel.text = "❌ No bus Available at this stop right now❗️"
-                    noBusLabel.adjustsFontSizeToFitWidth = true
-                    noBusLabel.textAlignment = .center
-                    noBusLabel.center.x = self.busesTable.center.x
-                    noBusLabel.center.y = self.busesTable.center.y-30
-                    self.tableActivityViewIndicator.removeFromSuperview()
-                    self.view.addSubview(noBusLabel)
+                    self.noBusLabel.text = "❌ No bus Available at this stop right now❗️"
+                    self.noBusLabel.adjustsFontSizeToFitWidth = true
+                    self.noBusLabel.textAlignment = .center
+                    self.noBusLabel.center.x = self.busesTable.center.x
+                    self.noBusLabel.center.y = self.busesTable.center.y-30
+                    self.view.addSubview(self.noBusLabel)
                 }
             }
 

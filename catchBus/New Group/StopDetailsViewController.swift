@@ -11,6 +11,7 @@ import UIKit
 class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
 
+    @IBOutlet weak var stopDetailTableActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var stopDetailTable: UITableView!
     var currentStop = Stop(stopNo: "", stopName: "")
     var busesAtThisStop = [BusInfo]()
@@ -20,6 +21,7 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         self.stopDetailTable.dataSource = self
         self.stopDetailTable.delegate = self
         self.stopDetailTable.rowHeight = 70
+        
         // Do any additional setup after loading the view.
         self.navigationItem.largeTitleDisplayMode = .never
         self.navigationItem.title = self.currentStop.stopName
@@ -36,10 +38,16 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         self.loadStopDetailTable(handler: { completed in
             if completed{
                 DispatchQueue.main.async {
+                    UIApplication.shared.beginIgnoringInteractionEvents()
+                    self.stopDetailTableActivityIndicator.startAnimating()
                     self.stopDetailTable.reloadData()
+                    self.stopDetailTableActivityIndicator.stopAnimating()
+                    UIApplication.shared.endIgnoringInteractionEvents()
                 }
             } else {
                 DispatchQueue.main.async {
+                    self.stopDetailTableActivityIndicator.removeFromSuperview()
+                    
                     let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
     
                     noBusLabel.text = "❌ No bus Available at this stop right now❗️"

@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -69,9 +70,14 @@
                         <viewLayoutGuide key="safeArea" id="Uee-0j-aNJ"/>
                     </view>
                     <navigationItem key="navigationItem" id="wEi-tC-kns">
-                        <barButtonItem key="leftBarButtonItem" id="Dih-xi-fAj">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem id="Dih-xi-fAj">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </barButtonItem>
+                            <barButtonItem systemItem="refresh" id="DOz-4c-tCf">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="busesTable" destination="cDM-g1-woW" id="i9a-rk-EiA"/>
@@ -205,7 +211,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="65.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="bus" translatesAutoresizingMaskIntoConstraints="NO" id="XXp-tQ-Htw">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="bus" translatesAutoresizingMaskIntoConstraints="NO" id="XXp-tQ-Htw">
                                                     <rect key="frame" x="20" y="21" width="25" height="25"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QIJ-fw-msZ">
@@ -287,9 +293,15 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="vUx-JD-CMt">
+                                <rect key="frame" x="169" y="116" width="37" height="37"/>
+                                <color key="color" red="0.81568627449999997" green="0.0078431372550000003" blue="0.1058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="vUx-JD-CMt" firstAttribute="top" secondItem="esc-DA-Vyz" secondAttribute="top" id="6iG-Nt-dOr"/>
+                            <constraint firstItem="vUx-JD-CMt" firstAttribute="centerX" secondItem="mJz-oC-wPv" secondAttribute="centerX" id="JeK-uJ-2ao"/>
                             <constraint firstAttribute="bottom" secondItem="JKB-SU-R0m" secondAttribute="bottom" id="aQW-tS-Nl3"/>
                             <constraint firstItem="JKB-SU-R0m" firstAttribute="trailing" secondItem="esc-DA-Vyz" secondAttribute="trailing" id="bJr-Y8-EQY"/>
                             <constraint firstItem="JKB-SU-R0m" firstAttribute="top" secondItem="esc-DA-Vyz" secondAttribute="top" id="tUZ-F7-jZY"/>
@@ -299,6 +311,7 @@
                     </view>
                     <connections>
                         <outlet property="stopDetailTable" destination="JKB-SU-R0m" id="ZTk-cK-nTa"/>
+                        <outlet property="stopDetailTableActivityIndicator" destination="vUx-JD-CMt" id="KCt-I1-gxV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kZY-Zq-Nzp" userLabel="First Responder" sceneMemberID="firstResponder"/>

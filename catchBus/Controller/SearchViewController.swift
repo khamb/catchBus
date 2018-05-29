@@ -46,9 +46,10 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         self.searchController.obscuresBackgroundDuringPresentation = false
         definesPresentationContext = true
         self.navigationItem.searchController = self.searchController
+        self.navigationItem.hidesSearchBarWhenScrolling = false
         self.searchBar = (self.navigationItem.searchController?.searchBar)!
-        //self.searchController.hidesNavigationBarDuringPresentation = false
         self.searchBar.delegate = self
+        
         self.searchBar.placeholder = "search by stop name..."
     }
     
