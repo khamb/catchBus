@@ -18,6 +18,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var userCoordinates: CLLocationCoordinate2D!
     
     let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 30))
+    
     let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
     
     @IBOutlet weak var mapView: MKMapView!
@@ -73,43 +74,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-
-        self.loadTable(handler: { completed, closestStop in
-            if completed{
-                DispatchQueue.main.async{
-                    if !self.noBusLabel.isHidden{
-                        self.noBusLabel.isHidden = true
-                    }
-                    
-                    self.tableActivityViewIndicator.startAnimating()
-                    //update stop name on
-                    self.stop = closestStop
-                    self.rightLabel.text = "🚏"+closestStop.stopName
-                    
-                    self.busesTable.reloadData() //reloading buses table
-                    self.tableActivityViewIndicator.stopAnimating()
-                }
-            } else{
-                DispatchQueue.main.async {
-                    self.tableActivityViewIndicator.removeFromSuperview()
-                    
-                    self.noBusLabel.isHidden = false
-                    
-                    self.rightLabel.text = "🚏"+closestStop.stopName
-                    
-                    self.noBusLabel.text = "❌ No bus Available at this stop right now❗️"
-                    self.noBusLabel.adjustsFontSizeToFitWidth = true
-                    self.noBusLabel.textAlignment = .center
-                    self.noBusLabel.center.x = self.busesTable.center.x
-                    self.noBusLabel.center.y = self.busesTable.center.y-30
-                    self.view.addSubview(self.noBusLabel)
-                }
-            }
-
-        })
-        
-
+        self.loadTableOrDisplayNoBusLabel()
+    }
+    
+    
+    @IBAction func onRefreshTapped(_ sender: Any) {
+        self.loadTableOrDisplayNoBusLabel()
     }
     
     private func initAllStopsArray(){
@@ -169,6 +139,44 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         })
         UIApplication.shared.endIgnoringInteractionEvents()
         DataService.instance.reset()
+    }
+    
+    func loadTableOrDisplayNoBusLabel(){ // helper to refactor code and avoid to copy all the code over and over
+        self.loadTable(handler: { completed, closestStop in
+            if completed{
+                DispatchQueue.main.async{
+                    if !self.noBusLabel.isHidden{
+                        self.noBusLabel.isHidden = true
+                    }
+                    
+                    self.tableActivityViewIndicator.startAnimating()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.25, execute: {
+                        //update stop name on
+                        self.stop = closestStop
+                        self.rightLabel.text = "🚏"+closestStop.stopName
+                        self.busesTable.reloadData() //reloading buses table
+                        self.tableActivityViewIndicator.stopAnimating()
+                    })
+                }
+            } else{
+                DispatchQueue.main.async {
+                    self.tableActivityViewIndicator.removeFromSuperview()
+                    
+                    self.noBusLabel.isHidden = false
+                    
+                    self.rightLabel.text = "🚏"+closestStop.stopName
+                    
+                    self.noBusLabel.text = "❌ No bus Available at this stop right now❗️"
+                    self.noBusLabel.adjustsFontSizeToFitWidth = true
+                    self.noBusLabel.textAlignment = .center
+                    self.noBusLabel.center.x = self.busesTable.center.x
+                    self.noBusLabel.center.y = self.busesTable.center.y-30
+                    self.view.addSubview(self.noBusLabel)
+                }
+            }
+            
+        })
     }
     
     @objc func refreshTable(){

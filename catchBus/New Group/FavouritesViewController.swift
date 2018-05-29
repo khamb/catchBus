@@ -34,7 +34,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
             if self.noFavLabel.isHidden{
                 self.noFavLabel.isHidden = false
             }
-            noFavLabel.text = "❌ No bus Available at this stop right now❗️"
+            noFavLabel.text = "❌ I see no favourites 🧐🧐🧐"
             noFavLabel.adjustsFontSizeToFitWidth = true
             noFavLabel.textAlignment = .center
             noFavLabel.center.x = self.view.center.x

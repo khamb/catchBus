@@ -48,6 +48,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         self.navigationItem.searchController = self.searchController
         self.navigationItem.hidesSearchBarWhenScrolling = false
         self.searchBar = (self.navigationItem.searchController?.searchBar)!
+        self.searchBar.tintColor = UIColor.white
         self.searchBar.delegate = self
         
         self.searchBar.placeholder = "search by stop name..."
