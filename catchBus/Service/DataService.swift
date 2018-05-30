@@ -41,31 +41,47 @@ class DataService{
                     let jsonResponse = JSON(data!)
                     
                     let routes = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].arrayValue
-                    
-                    for route in routes{
-                        routeNo = route["RouteNo"].stringValue
-                        routeHeading = route["RouteHeading"].stringValue
-                        time = route["Trips"][0]["AdjustedScheduleTime"].stringValue
-                        
+                    if routes.isEmpty{
+                        let tmp = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].dictionaryValue
+                        routeNo = tmp["RouteNo"]?.stringValue
+                        routeHeading = tmp["RouteHeading"]?.stringValue
+       
+                        if let trips = tmp["Trips"]?.dictionaryValue{
+                            if trips.isEmpty{
+                                time = "-"
+                            } else{
+                                time = tmp["Trips"]!["Trip"][0]["AdjustedScheduleTime"].stringValue
+                            }
+                        }
+    
                         bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
                         buses.append(bInfo)
+                    } else {
+                        for route in routes{
+                            routeNo = route["RouteNo"].stringValue
+                            routeHeading = route["RouteHeading"].stringValue
+                            time = route["Trips"][0]["AdjustedScheduleTime"].stringValue
+                            bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
+                            buses.append(bInfo)
+                        }
                     }
                     
+                    //filter buses out of service
+                    buses = buses.filter({bus in
+                        return bus.time != "-"
+                    })
+                    
+                    //sort by ascending arrival time
+                    buses.sort(by: {(bus1, bus2) in
+                        return Int(bus1.time)! < Int(bus2.time)!
+                    })
+                    
+                    handler(buses,stop)
                 } else {
                     print(error.debugDescription)
                 }
 
-                //filter buses out of service
-                buses = buses.filter({bus in
-                    return bus.time != "-"
-                })
-                
-                //sort by ascending arrival time
-                buses.sort(by: {(bus1, bus2) in
-                    return Int(bus1.time)! < Int(bus2.time)!
-                })
 
-                handler(buses,stop)
             })
             apiTask.resume() // end of API call
         }
@@ -93,14 +109,19 @@ class DataService{
                 let jsonResponse = JSON(data!)
                 
                 let routes = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].arrayValue
-                //print(jsonResponse["GetRouteSummaryForStopResult"]["Routes"])
 
                 if routes.isEmpty{
                     let tmp = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].dictionaryValue
                     routeNo = tmp["RouteNo"]?.stringValue
                     routeHeading = tmp["RouteHeading"]?.stringValue
-
-                    time = tmp["Trips"]!["Trip"][0]["AdjustedScheduleTime"].stringValue
+                    if let trips = tmp["Trips"]?.dictionaryValue{
+                        if trips.isEmpty{
+                            time = "-"
+                        } else{
+                            time = tmp["Trips"]!["Trip"][0]["AdjustedScheduleTime"].stringValue
+                        }
+                    }
+                    
                     bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
                     buses.append(bInfo)
                 } else {
@@ -108,26 +129,26 @@ class DataService{
                         routeNo = route["RouteNo"].stringValue
                         routeHeading = route["RouteHeading"].stringValue
                         time = route["Trips"][0]["AdjustedScheduleTime"].stringValue
-    
                         bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
                         buses.append(bInfo)
                     }
                 }
                 
+                // filter buses out of service
+                buses = buses.filter({bus in
+                    return bus.time != "-"
+                })
+                
+                //sort by ascending arrival time
+                buses.sort(by: {(bus1, bus2) in
+                    return Int(bus1.time)! < Int(bus2.time)!
+                })
+                handler(buses)
+                
             } else {
                 print(error.debugDescription)
             }
             
-           // filter buses out of service
-            buses = buses.filter({bus in
-                return bus.time != "-"
-            })
-            
-            //sort by ascending arrival time
-            buses.sort(by: {(bus1, bus2) in
-                return Int(bus1.time)! < Int(bus2.time)!
-            })
-            handler(buses)
         })
         apiTask.resume() // end of API call
         
@@ -158,7 +179,7 @@ class DataService{
         
         //let location = "45.414535,-75.671526"
         let API_KEY = "AIzaSyBmG3KTRGPdOgzuBqw_CUYlNbgLyV81xsM"
-        let url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+location+"&radius=200&type=bus_station&key="+API_KEY
+        let url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+location+"&radius=500&type=bus_station&key="+API_KEY
         
         URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) in
             

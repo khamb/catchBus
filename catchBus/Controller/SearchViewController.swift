@@ -31,8 +31,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
         self.stopsTable.reloadData()
     }
@@ -77,10 +77,11 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                 stopDetailVC.currentStop = ViewController.allStops[index.row]
             } else {
                 stopDetailVC.currentStop = self.filteredStops[index.row]
+                
+                //load table data source
+                
             }
-
         }
-        
     }
     
 }

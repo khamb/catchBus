@@ -26,21 +26,21 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         self.navigationItem.largeTitleDisplayMode = .never
         self.navigationItem.title = self.currentStop.stopName
         
-        //register cell
-        self.stopDetailTable.register(UINib(nibName: "busInfoCell", bundle: nil), forCellReuseIdentifier: "busInfoCellIdentifier")
         
-
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
-        self.loadStopDetailTable(handler: { completed in
+        self.loadStopDetailTable(handler: { completed, data in
             if completed{
                 DispatchQueue.main.async {
                     UIApplication.shared.beginIgnoringInteractionEvents()
                     self.stopDetailTableActivityIndicator.startAnimating()
+                    
+                    self.busesAtThisStop = data
                     self.stopDetailTable.reloadData()
+                    
                     self.stopDetailTableActivityIndicator.stopAnimating()
                     UIApplication.shared.endIgnoringInteractionEvents()
                 }
@@ -67,17 +67,19 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         // Dispose of any resources that can be recreated.
     }
     
-    func loadStopDetailTable(handler: @escaping (_ completed: Bool)->()){
-        
-        DataService.instance.getBusInfoAtStop(withStopCode: currentStop.stopNo, handler: { data in
+    
+    func loadStopDetailTable(handler: @escaping (_ completed: Bool, _ data: [BusInfo] )->()){
+        DataService.instance.getBusInfoAtStop(withStopCode: self.currentStop.stopNo, handler: { data in
             if !data.isEmpty{
-                self.busesAtThisStop = data
-                handler(true)
+                handler(true, data)
             } else {
-                handler(false)
+                handler(false,[BusInfo]())
             }
-            
         })
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -85,7 +87,7 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = self.stopDetailTable.dequeueReusableCell(withIdentifier: "busInfoCellIdentifier") as? busInfoCell else {return UITableViewCell()}
+       guard let cell = Bundle.main.loadNibNamed("busInfoCell", owner: self, options: nil)?.first as? busInfoCell else {return UITableViewCell()}
         cell.initRow(busInfo: self.busesAtThisStop[indexPath.row])
         return cell
     }

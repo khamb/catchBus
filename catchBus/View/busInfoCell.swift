@@ -16,12 +16,12 @@ class busInfoCell: UITableViewCell {
     @IBOutlet weak var shadowView: UIView!
     
     override func awakeFromNib() {
-        super.awakeFromNib()
         // Initialization code
         self.shadowView.layer.cornerRadius = 4
         self.shadowView.layer.shadowOffset = CGSize(width: 0, height: 2)
         self.shadowView.layer.shadowColor = UIColor.darkGray.cgColor
         self.shadowView.layer.shadowOpacity = 0.5
+        super.awakeFromNib()
     }
     
     func initRow(busInfo: BusInfo){
@@ -30,10 +30,5 @@ class busInfoCell: UITableViewCell {
         timeLabel.text = busInfo.time
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
 
 }
