@@ -41,6 +41,7 @@ class DataService{
                     let jsonResponse = JSON(data!)
                     
                     let routes = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].arrayValue
+
                     if routes.isEmpty{
                         let tmp = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].dictionaryValue
                         routeNo = tmp["RouteNo"]?.stringValue
@@ -114,6 +115,7 @@ class DataService{
                     let tmp = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].dictionaryValue
                     routeNo = tmp["RouteNo"]?.stringValue
                     routeHeading = tmp["RouteHeading"]?.stringValue
+                    
                     if let trips = tmp["Trips"]?.dictionaryValue{
                         if trips.isEmpty{
                             time = "-"
@@ -124,6 +126,7 @@ class DataService{
                     
                     bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
                     buses.append(bInfo)
+
                 } else {
                     for route in routes{
                         routeNo = route["RouteNo"].stringValue

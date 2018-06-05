@@ -16,6 +16,7 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     var currentStop = Stop(stopNo: "", stopName: "")
     var busesAtThisStop = [BusInfo]()
     
+    let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
     override func viewDidLoad() {
         super.viewDidLoad()
         self.stopDetailTable.dataSource = self
@@ -26,11 +27,14 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         self.navigationItem.largeTitleDisplayMode = .never
         self.navigationItem.title = self.currentStop.stopName
         
+        self.setupTableRefresher()
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+
         
         self.loadStopDetailTable(handler: { completed, data in
             if completed{
@@ -46,25 +50,28 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.stopDetailTableActivityIndicator.removeFromSuperview()
-                    
-                    let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
-    
-                    noBusLabel.text = "❌ No bus Available at this stop right now❗️"
-                    noBusLabel.adjustsFontSizeToFitWidth = true
-                    noBusLabel.textAlignment = .center
-                    noBusLabel.center.x = self.stopDetailTable.center.x
-                    noBusLabel.center.y = self.stopDetailTable.center.y-30
-                    self.view.addSubview(noBusLabel)
+                  self.configNoBusLabel()
                 }
             }
         })
+        
 
+        
     }
 
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func configNoBusLabel(){
+        self.noBusLabel.text = "❌ No bus Available at this stop right now❗️"
+        self.noBusLabel.adjustsFontSizeToFitWidth = true
+        self.noBusLabel.textAlignment = .center
+        self.noBusLabel.center.x = self.stopDetailTable.center.x
+        self.noBusLabel.center.y = self.stopDetailTable.center.y-30
+        self.view.addSubview(self.noBusLabel)
     }
     
     
@@ -77,6 +84,24 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
             }
         })
     }
+    
+    
+    @objc func refreshStopsTable(){
+        self.stopDetailTable.refreshControl?.beginRefreshing()
+        self.loadStopDetailTable(handler: { completed, data in
+            DispatchQueue.main.async {
+                self.busesAtThisStop = data
+                self.stopDetailTable.reloadData()
+                self.stopDetailTable.refreshControl?.endRefreshing()
+            }
+        })
+    }
+    
+    func setupTableRefresher(){
+        self.stopDetailTable.refreshControl = UIRefreshControl()
+        self.stopDetailTable.refreshControl?.addTarget(self, action: #selector(StopDetailsViewController.self.refreshStopsTable), for: .valueChanged)
+    }
+    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
