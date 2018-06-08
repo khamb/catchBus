@@ -75,12 +75,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidAppear(animated)
         
         self.loadTableOrDisplayNoBusLabel()
-        
+    
     }
 
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.userCoordinates = locations[0].coordinate
+        self.locationManager.stopUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        self.locationManager.stopUpdatingLocation()
+        print(error)
+    }
     
     @IBAction func onRefreshTapped(_ sender: Any) {
         self.centerOnUserLocation()
+        self.locationManager.startUpdatingLocation()
         self.loadTableOrDisplayNoBusLabel()
     }
     
@@ -130,7 +140,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     func loadTable(handler: @escaping (_ completed: Bool,_ closest: Stop)->()){
 
-        //first get closest stops' name45.422923, -75.681740
+        //first get closest stops' name45.422923,-75.681740
         DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
             DataService.instance.getStopNumber(handler: { completed in
                 DataService.instance.getBusInfos(handler: { (data, stop) in
@@ -152,36 +162,34 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func loadTableOrDisplayNoBusLabel(){ // helper to refactor code and avoid to copy all the code over and over
         
-        
+
         self.loadTable(handler: { completed, closestStop in
             if completed{
                 DispatchQueue.main.async{
                     UIApplication.shared.beginIgnoringInteractionEvents()
                     self.tableActivityViewIndicator.startAnimating()
+                    self.noBusLabel.isHidden = true
                     
-                    if !self.noBusLabel.isHidden{
-                        self.noBusLabel.isHidden = true
-                    }
                     //update stop name on
                     self.stop = closestStop
                     self.rightLabel.text = "🚏"+closestStop.stopName
                     self.busesTable.reloadData()
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.25, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+1, execute: {
                         self.tableActivityViewIndicator.stopAnimating()
                         UIApplication.shared.endIgnoringInteractionEvents()
                     })
-
                 }
             } else{
                 DispatchQueue.main.async {
+                    self.tableActivityViewIndicator.isHidden = true
                     self.rightLabel.text = "🚏"+closestStop.stopName
                     self.setupNoBusLabel()
                 }
             }
             
         })
-   
+
     }
     
     @objc func refreshTable(){

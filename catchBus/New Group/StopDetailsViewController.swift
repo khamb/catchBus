@@ -19,9 +19,11 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.stopDetailTable.dataSource = self
         self.stopDetailTable.delegate = self
         self.stopDetailTable.rowHeight = 70
+       // self.stopDetailTable.register(UINib(nibName: "busInfoCell", bundle: nil), forCellReuseIdentifier: "busInfoCellId")
         
         // Do any additional setup after loading the view.
         self.navigationItem.largeTitleDisplayMode = .never
@@ -31,32 +33,11 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
-        
-        self.loadStopDetailTable(handler: { completed, data in
-            if completed{
-                DispatchQueue.main.async {
-                    UIApplication.shared.beginIgnoringInteractionEvents()
-                    self.stopDetailTableActivityIndicator.startAnimating()
-                    
-                    self.busesAtThisStop = data
-                    self.stopDetailTable.reloadData()
-                    
-                    self.stopDetailTableActivityIndicator.stopAnimating()
-                    UIApplication.shared.endIgnoringInteractionEvents()
-                }
-            } else {
-                DispatchQueue.main.async {
-                  self.configNoBusLabel()
-                }
-            }
-        })
-        
+        self.loadStopDetailTable()
 
-        
     }
 
     
@@ -75,31 +56,50 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     
-    func loadStopDetailTable(handler: @escaping (_ completed: Bool, _ data: [BusInfo] )->()){
+    func loadStopDetailTable(){//make api request and populate the table datasource
+
         DataService.instance.getBusInfoAtStop(withStopCode: self.currentStop.stopNo, handler: { data in
             if !data.isEmpty{
-                handler(true, data)
+                self.busesAtThisStop = data
+                
+                DispatchQueue.main.async {
+                    UIApplication.shared.beginIgnoringInteractionEvents()
+                    self.stopDetailTableActivityIndicator.startAnimating()
+
+                    self.stopDetailTable.reloadData() //try to reload visible rows
+
+                    self.stopDetailTableActivityIndicator.stopAnimating()
+                    UIApplication.shared.endIgnoringInteractionEvents()
+                }
+
             } else {
-                handler(false,[BusInfo]())
+                DispatchQueue.main.async {
+                    //self.stopDetailTableActivityIndicator.removeFromSuperview()
+                    self.stopDetailTableActivityIndicator.isHidden = true
+                    self.configNoBusLabel()
+                }
             }
         })
+
+        
     }
     
     
     @objc func refreshStopsTable(){
+        UIApplication.shared.beginIgnoringInteractionEvents()
         self.stopDetailTable.refreshControl?.beginRefreshing()
-        self.loadStopDetailTable(handler: { completed, data in
-            DispatchQueue.main.async {
-                self.busesAtThisStop = data
-                self.stopDetailTable.reloadData()
-                self.stopDetailTable.refreshControl?.endRefreshing()
-            }
+        self.loadStopDetailTable()
+        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
+            self.stopDetailTable.refreshControl?.endRefreshing()
+            UIApplication.shared.endIgnoringInteractionEvents()
         })
+
     }
     
     func setupTableRefresher(){
         self.stopDetailTable.refreshControl = UIRefreshControl()
         self.stopDetailTable.refreshControl?.addTarget(self, action: #selector(StopDetailsViewController.self.refreshStopsTable), for: .valueChanged)
+        self.stopDetailTable.refreshControl?.attributedTitle = NSAttributedString(string: "reloading ...")
     }
     
     
@@ -112,8 +112,13 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       guard let cell = Bundle.main.loadNibNamed("busInfoCell", owner: self, options: nil)?.first as? busInfoCell else {return UITableViewCell()}
+      
+        let start = CACurrentMediaTime()
+        guard let cell = Bundle.main.loadNibNamed("busInfoCell", owner: self, options: nil)?.first as? busInfoCell else {return UITableViewCell()}
+
         cell.initRow(busInfo: self.busesAtThisStop[indexPath.row])
+        let end = CACurrentMediaTime()
+        print(end-start)
         return cell
     }
     

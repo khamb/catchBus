@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gB4-pD-Kay">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gB4-pD-Kay">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -46,8 +46,8 @@
                                 </prototypes>
                             </tableView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="jXw-nJ-NVf">
-                                <rect key="frame" x="0.0" y="374" width="375" height="37"/>
-                                <color key="color" red="0.58431372550000005" green="0.039215686270000001" blue="0.023529411760000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="169" y="374" width="37" height="37"/>
+                                <color key="color" red="0.81568627449999997" green="0.0078431372550000003" blue="0.1058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -58,12 +58,11 @@
                             <constraint firstItem="cDM-g1-woW" firstAttribute="top" secondItem="QGR-Hc-mUO" secondAttribute="bottom" constant="1" id="Cxe-Wj-lBA"/>
                             <constraint firstItem="QGR-Hc-mUO" firstAttribute="top" secondItem="Uee-0j-aNJ" secondAttribute="top" constant="259" id="GD3-oz-Qg0"/>
                             <constraint firstItem="glM-LO-A1H" firstAttribute="leading" secondItem="Uee-0j-aNJ" secondAttribute="leading" id="PEG-MR-zQT"/>
-                            <constraint firstItem="jXw-nJ-NVf" firstAttribute="trailing" secondItem="Uee-0j-aNJ" secondAttribute="trailing" id="Yox-5h-Ch6"/>
+                            <constraint firstItem="jXw-nJ-NVf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Ta1-7x-1fH"/>
                             <constraint firstItem="cDM-g1-woW" firstAttribute="top" secondItem="glM-LO-A1H" secondAttribute="bottom" id="bXQ-42-tHi"/>
                             <constraint firstItem="cDM-g1-woW" firstAttribute="trailing" secondItem="Uee-0j-aNJ" secondAttribute="trailing" id="bcw-m4-YxJ"/>
                             <constraint firstItem="cDM-g1-woW" firstAttribute="top" secondItem="glM-LO-A1H" secondAttribute="bottom" id="h1U-hW-SfZ"/>
                             <constraint firstItem="glM-LO-A1H" firstAttribute="top" secondItem="Uee-0j-aNJ" secondAttribute="top" id="hNP-iz-rJh"/>
-                            <constraint firstItem="jXw-nJ-NVf" firstAttribute="leading" secondItem="Uee-0j-aNJ" secondAttribute="leading" id="ibW-dw-6EC"/>
                             <constraint firstItem="jXw-nJ-NVf" firstAttribute="top" secondItem="glM-LO-A1H" secondAttribute="bottom" id="pRC-95-Lxj"/>
                             <constraint firstItem="QGR-Hc-mUO" firstAttribute="leading" secondItem="Uee-0j-aNJ" secondAttribute="leading" constant="325" id="rLq-aN-heE"/>
                             <constraint firstItem="QGR-Hc-mUO" firstAttribute="trailing" secondItem="Uee-0j-aNJ" secondAttribute="trailing" constant="1" id="yGc-Zd-g33"/>

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class BusInfo {
+class BusInfo{
     var no: String!
     var routeHeading: String!
     var time: String!
@@ -22,8 +22,10 @@ class BusInfo {
         } else{
             self.time = time
         }
-
     }
     
-
+  
+    
 }
+
+
