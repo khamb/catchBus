@@ -21,6 +21,6 @@ class FavBusInfo: BusInfo {
     }
     
     static func ==(left: FavBusInfo, right: FavBusInfo)->Bool{
-        return left.no == right.no && left.stop.stopName == right.stop.stopName
+        return left.no == right.no && left.stop.stopName == right.stop.stopName && left.routeHeading == right.routeHeading
     }
 }

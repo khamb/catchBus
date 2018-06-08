@@ -11,6 +11,7 @@ import UIKit
 class FavouritesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var favouritesTable: UITableView!
+    let noFavLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +19,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         self.favouritesTable.delegate = self
         self.favouritesTable.dataSource = self
         self.favouritesTable.rowHeight = 70
+ 
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,7 +29,22 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.favouritesTable.reloadData()
+        
+        if FavouriteBuses.instance.favourites.isEmpty{
+            if self.noFavLabel.isHidden{
+                self.noFavLabel.isHidden = false
+            }
+            noFavLabel.text = "❌ I see no favourites 🧐🧐🧐"
+            noFavLabel.adjustsFontSizeToFitWidth = true
+            noFavLabel.textAlignment = .center
+            noFavLabel.center.x = self.view.center.x
+            noFavLabel.center.y = self.view.center.y-30
+            self.view.addSubview(noFavLabel)
+        } else {
+            self.noFavLabel.isHidden = true
+            self.favouritesTable.reloadData()
+        }
+
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -41,14 +58,22 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         cell.initRow(busInfo: bus)
         return cell
     }
-    /*
-    // MARK: - Navigation
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "Delete", handler: { action, view, completed in
+            
+            let favBus = FavouriteBuses.instance.favourites[indexPath.row] 
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+            if FavouriteBuses.instance.removeFromFavourites(favBus: favBus){
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                let successAlert = UIAlertController(title: "Removed frm favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
+                self.present(successAlert, animated: true, completion: {
+                    successAlert.dismiss(animated: true, completion: nil)
+                })
+                completed(true)
+            }
+        })
+        return UISwipeActionsConfiguration(actions: [delete])
     }
-    */
 
 }

@@ -25,12 +25,12 @@ class DataService{
         for stop in self.closestStops{
             
             let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStopAllRoutes?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&stopNo="+stop.stopNo+"&format=json"
-
+            
             let session = URLSession.shared
             
             //making a request to OC transpo API to get bus informations
             let apiTask = session.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) in
-  
+                
                 if error == nil{
                     
                     var routeNo: String!
@@ -38,37 +38,50 @@ class DataService{
                     var time: String!
                     var bInfo: BusInfo!
                     
-                    let jsonResponse = JSON(data!)
+                    guard let data = data else {return}
+                    let jsonResponse = try! JSON(data: data)
                     
                     let routes = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].arrayValue
                     
-                    for route in routes{
-                        routeNo = route["RouteNo"].stringValue
-                        routeHeading = route["RouteHeading"].stringValue
+                    if routes.isEmpty{
+                        let tmp = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].dictionaryValue
+                        routeNo = tmp["RouteNo"]?.stringValue
+                        routeHeading = tmp["RouteHeading"]?.stringValue
                         
-                        for trip in route["Trips"].arrayValue{
-                            time = trip["AdjustedScheduleTime"].stringValue
-                            break
+                        if (tmp["Trips"]?.dictionaryValue.isEmpty)!{
+                            time = "-"
+                        } else{
+                            time = tmp["Trips"]!["Trip"][0]["AdjustedScheduleTime"].stringValue
                         }
-                        bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time ?? "-")
+                        
+                        bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
                         buses.append(bInfo)
+                    } else {
+
+                        for route in routes{
+                            if route["Trips"].arrayValue.isEmpty{// if there is no bus trips for that route go to next
+                                continue
+                            }
+                            routeNo = route["RouteNo"].stringValue
+                            routeHeading = route["RouteHeading"].stringValue
+                            time = route["Trips"][0]["AdjustedScheduleTime"].stringValue
+                            bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
+                            buses.append(bInfo)
+                        }
                     }
+            
                     
+                    //sort by ascending arrival time
+                    buses.sort(by: {(bus1, bus2) in
+                        return Int(bus1.time)! < Int(bus2.time)!
+                    })
+                    
+                    handler(buses,stop)
                 } else {
                     print(error.debugDescription)
                 }
-
-                //filter buses out of service
-                buses = buses.filter({bus in
-                    return bus.time != "-"
-                })
                 
-                //sort by ascending arrival time
-                buses.sort(by: {(bus1, bus2) in
-                    return Int(bus1.time)! < Int(bus2.time)!
-                })
-
-                handler(buses,stop)
+                
             })
             apiTask.resume() // end of API call
         }
@@ -76,7 +89,68 @@ class DataService{
         
     }
     
-    func makeApiCall(){
+    func getBusInfoAtStop(withStopCode: String, handler: @escaping (_ busInfo: [BusInfo]) -> ()){
+        var buses = [BusInfo]()
+        
+        let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStopAllRoutes?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&stopNo="+withStopCode+"&format=json"
+        
+        let session = URLSession.shared
+
+        //making a request to OC transpo API to get bus informations
+        let apiTask = session.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) in
+
+            if error == nil{
+                
+                var routeNo: String!
+                var routeHeading: String!
+                var time: String!
+                var bInfo: BusInfo!
+                
+                
+                let jsonResponse = try! JSON(data: data!)
+                
+                let routes = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].arrayValue
+
+                if routes.isEmpty{ //single route stops
+                    let tmp = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].dictionaryValue
+                    
+                    if (tmp["Trips"]?.dictionaryValue.isEmpty)!{
+                        return
+                    }
+                    
+                    routeNo = tmp["RouteNo"]?.stringValue
+                    routeHeading = tmp["RouteHeading"]?.stringValue
+                    time = tmp["Trips"]!["Trip"][0]["AdjustedScheduleTime"].stringValue
+                    bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
+                    buses.append(bInfo)
+
+                } else { //multi routes stops
+                    for route in routes{
+                        if route["Trips"].arrayValue.isEmpty{// if there is no bus trips for that route got to next
+                            continue
+                        }
+                        routeNo = route["RouteNo"].stringValue
+                        routeHeading = route["RouteHeading"].stringValue
+                        time = route["Trips"][0]["AdjustedScheduleTime"].stringValue
+                        bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
+                        buses.append(bInfo)
+                    }
+                }
+
+                //sort by ascending arrival time
+                buses.sort(by: {(bus1, bus2) in
+                    return Int(bus1.time)! < Int(bus2.time)!
+                })
+
+                handler(buses)
+            } else {
+                print(error.debugDescription)
+            }
+            
+            
+            
+        })
+        apiTask.resume() // end of API call
         
     }
     
@@ -95,7 +169,7 @@ class DataService{
             print("error getting stop number: all stops array is empty !")
             handler(false)
         }
-
+        
     }// end of getStopNumber
     
     
@@ -105,7 +179,7 @@ class DataService{
         
         //let location = "45.414535,-75.671526"
         let API_KEY = "AIzaSyBmG3KTRGPdOgzuBqw_CUYlNbgLyV81xsM"
-        let url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+location+"&radius=200&type=bus_station&key="+API_KEY
+        let url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+location+"&radius=500&type=bus_station&key="+API_KEY
         
         URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) in
             

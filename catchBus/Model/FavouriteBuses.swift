@@ -24,6 +24,18 @@ class FavouriteBuses{
         }
     }
     
+    func removeFromFavourites(favBus: FavBusInfo)->Bool{
+        
+        for i in 0..<self.favourites.count{
+            if self.favourites[i] == favBus{
+                self.favourites.remove(at: i)
+                return true
+            }
+        }
+        
+        return false
+    }
+    
     func getFavBusInfo(no: Int, stop: Int){
         let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStop?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&routeNo=\(no)&stopNo=\(stop)"
         let urlRequest = URLRequest(url: URL(string: url)!)

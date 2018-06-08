@@ -19,6 +19,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 30))
     
+    let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
+    
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var busesTable: UITableView!
     var busesData = [BusInfo]()
@@ -36,11 +38,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon")) //title icon
         
         //adding right bar item
-        rightLabel.textColor = UIColor.white
-        rightLabel.adjustsFontForContentSizeCategory = true
-        rightLabel.textAlignment = .right
-        rightLabel.adjustsFontSizeToFitWidth = true
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: rightLabel)]
+
+        self.addNavbarRightLabel()
+
         //end of customize navigation bar ***
         
         self.locationManager.delegate = self
@@ -50,6 +50,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //init mapView
         self.mapView.delegate = self
         self.mapView.showsUserLocation = true
+        self.mapView.showsBuildings = true
         self.centerOnUserLocation()
         
         // configure busesTable
@@ -62,7 +63,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //populate stops array
         self.initAllStopsArray()
-        print(ViewController.allStops.count)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -70,42 +71,34 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-
-        self.loadTable(handler: { completed, closestStop in
-            if completed{
-                DispatchQueue.main.async{
-                    self.tableActivityViewIndicator.startAnimating()
-                    //update stop name on
-                    self.stop = closestStop
-                    self.rightLabel.text = "🚏"+closestStop.stopName
-                    
-                    self.busesTable.reloadData() //reloading buses table
-                    self.tableActivityViewIndicator.stopAnimating()
-                    
-                }
-            } else{
-                DispatchQueue.main.async {
-                    
-                    self.rightLabel.text = "🚏"+closestStop.stopName
-                    
-                    let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
-    
-                    noBusLabel.text = "❌ No bus Available at this stop right now❗️"
-                    noBusLabel.adjustsFontSizeToFitWidth = true
-                    noBusLabel.textAlignment = .center
-                    noBusLabel.center.x = self.busesTable.center.x
-                    noBusLabel.center.y = self.busesTable.center.y-30
-                    self.tableActivityViewIndicator.removeFromSuperview()
-                    self.view.addSubview(noBusLabel)
-                }
-            }
-
-        })
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
+        self.loadTableOrDisplayNoBusLabel()
+    
+    }
 
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.userCoordinates = locations[0].coordinate
+        self.locationManager.stopUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        self.locationManager.stopUpdatingLocation()
+        print(error)
+    }
+    
+    @IBAction func onRefreshTapped(_ sender: Any) {
+        self.centerOnUserLocation()
+        self.locationManager.startUpdatingLocation()
+        self.loadTableOrDisplayNoBusLabel()
+    }
+    
+    func addNavbarRightLabel(){
+        rightLabel.textColor = UIColor.white
+        rightLabel.textAlignment = .center
+        rightLabel.adjustsFontSizeToFitWidth = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightLabel)
     }
     
     private func initAllStopsArray(){
@@ -146,10 +139,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     func loadTable(handler: @escaping (_ completed: Bool,_ closest: Stop)->()){
-        UIApplication.shared.beginIgnoringInteractionEvents()
-        //first get closest stops' name45.422923, -75.681740
+
+        //first get closest stops' name45.422923,-75.681740
         DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
-            
             DataService.instance.getStopNumber(handler: { completed in
                 DataService.instance.getBusInfos(handler: { (data, stop) in
                     if !data.isEmpty{
@@ -163,8 +155,41 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             })
             
         })
-        UIApplication.shared.endIgnoringInteractionEvents()
+        
         DataService.instance.reset()
+
+    }
+    
+    func loadTableOrDisplayNoBusLabel(){ // helper to refactor code and avoid to copy all the code over and over
+        
+
+        self.loadTable(handler: { completed, closestStop in
+            if completed{
+                DispatchQueue.main.async{
+                    UIApplication.shared.beginIgnoringInteractionEvents()
+                    self.tableActivityViewIndicator.startAnimating()
+                    self.noBusLabel.isHidden = true
+                    
+                    //update stop name on
+                    self.stop = closestStop
+                    self.rightLabel.text = "🚏"+closestStop.stopName
+                    self.busesTable.reloadData()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now()+1, execute: {
+                        self.tableActivityViewIndicator.stopAnimating()
+                        UIApplication.shared.endIgnoringInteractionEvents()
+                    })
+                }
+            } else{
+                DispatchQueue.main.async {
+                    self.tableActivityViewIndicator.isHidden = true
+                    self.rightLabel.text = "🚏"+closestStop.stopName
+                    self.setupNoBusLabel()
+                }
+            }
+            
+        })
+
     }
     
     @objc func refreshTable(){
@@ -176,11 +201,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         })
     }
     
+    func setupNoBusLabel(){
+        self.noBusLabel.text = "❌ No bus Available at this stop right now❗️"
+        self.noBusLabel.center.x = self.busesTable.center.x
+        self.noBusLabel.center.y = self.busesTable.center.y-30
+        self.view.addSubview(self.noBusLabel)
+    }
+    
     func initTableRefresher(){
         self.busesTable.refreshControl = self.tableRefresher
         self.tableRefresher.addTarget(self, action: #selector(ViewController.self.refreshTable), for: UIControlEvents.valueChanged)
         self.tableRefresher.attributedTitle = NSAttributedString(string: "updating bus information ...")
-       // self.tableRefresher.endRefreshing()
     }
     
     
@@ -194,15 +225,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             if FavouriteBuses.instance.addToFavourites(favBus: favBus){
                 let alert = UIAlertController(title: "Add to favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
-                self.present(alert, animated: true, completion: {
-                    alert.dismiss(animated: true, completion: nil)
-                })
+                self.present(alert, animated: true, completion:nil)
+                alert.dismiss(animated: true, completion: nil)
                 completed(true)
             } else {
-                let alert = UIAlertController(title: "Add to favourites", message: "❌ ALREADY IN FAVOURITES!", preferredStyle: .alert)
-                self.present(alert, animated: true, completion: {
-                    alert.dismiss(animated: true, completion: nil)
-                })
+                let alert = UIAlertController(title: "Add to favourites", message: "❌ ALREADY IN YOUR FAVOURITES!", preferredStyle: .alert)
+                self.present(alert, animated: true, completion:nil)
+                 alert.dismiss(animated: true, completion: nil)
                 completed(true)
             }
         }
@@ -211,39 +240,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = busesTable.dequeueReusableCell(withIdentifier: "busInfoCellIdentifier") as? busInfoCell else {return UITableViewCell()}
+        guard let cell = Bundle.main.loadNibNamed("busInfoCell", owner: self, options: nil)?.first as? busInfoCell else {return UITableViewCell()}
         cell.initRow(busInfo: self.busesData[indexPath.row])
         return cell
     }
     
-}
-
-
-extension ViewController:  WCSessionDelegate{
-    
-    func initWCSession(){
-        //activate watch connectivity if the device support it
-        if (WCSession.isSupported()) {
-            self.session = WCSession.default
-            self.session.delegate = self
-            self.session.activate()
-        }
-    }
-    
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-    }
-    
-    func sessionDidBecomeInactive(_ session: WCSession) {
-     
-    }
-    
-    func sessionDidDeactivate(_ session: WCSession) {
-
-    }
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-        
-    }
 }
 
 extension ViewController: MKMapViewDelegate{

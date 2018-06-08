@@ -18,7 +18,8 @@ class StopCell: UITableViewCell {
     }
     
     func initCell(stop: Stop){
-        self.stopLabel.text = stop.stopName.lowercased().capitalized
+        let text = stop.stopName.lowercased().capitalized
+        self.stopLabel.text = text
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
