@@ -43,30 +43,28 @@ class DataService{
                     
                     let routes = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].arrayValue
                     
-                    if routes.isEmpty{
+                    if routes.isEmpty{//single route stops
                         let tmp = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].dictionaryValue
-                        routeNo = tmp["RouteNo"]?.stringValue
-                        routeHeading = tmp["RouteHeading"]?.stringValue
                         
-                        if (tmp["Trips"]?.dictionaryValue.isEmpty)!{
-                            time = "-"
-                        } else{
+                        if tmp["Trips"]?.dictionaryValue != nil{
+                            routeNo = tmp["RouteNo"]?.stringValue
+                            routeHeading = tmp["RouteHeading"]?.stringValue
                             time = tmp["Trips"]!["Trip"][0]["AdjustedScheduleTime"].stringValue
-                        }
-                        
-                        bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
-                        buses.append(bInfo)
-                    } else {
-
-                        for route in routes{
-                            if route["Trips"].arrayValue.isEmpty{// if there is no bus trips for that route go to next
-                                continue
-                            }
-                            routeNo = route["RouteNo"].stringValue
-                            routeHeading = route["RouteHeading"].stringValue
-                            time = route["Trips"][0]["AdjustedScheduleTime"].stringValue
                             bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
                             buses.append(bInfo)
+                        }
+                        
+                    } else {//multi routes stops
+                        for route in routes{
+
+                            if !route["Trips"].arrayValue.isEmpty{// if there is no bus trips for that route go to next
+                                routeNo = route["RouteNo"].stringValue
+                                routeHeading = route["RouteHeading"].stringValue
+                                time = route["Trips"][0]["AdjustedScheduleTime"].stringValue
+                                bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
+                                buses.append(bInfo)
+                            }
+                            
                         }
                     }
             
@@ -95,7 +93,7 @@ class DataService{
         let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStopAllRoutes?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&stopNo="+withStopCode+"&format=json"
         
         let session = URLSession.shared
-
+        
         //making a request to OC transpo API to get bus informations
         let apiTask = session.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) in
 
@@ -113,27 +111,26 @@ class DataService{
 
                 if routes.isEmpty{ //single route stops
                     let tmp = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].dictionaryValue
-                    
-                    if (tmp["Trips"]?.dictionaryValue.isEmpty)!{
-                        return
-                    }
-                    
-                    routeNo = tmp["RouteNo"]?.stringValue
-                    routeHeading = tmp["RouteHeading"]?.stringValue
-                    time = tmp["Trips"]!["Trip"][0]["AdjustedScheduleTime"].stringValue
-                    bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
-                    buses.append(bInfo)
 
-                } else { //multi routes stops
-                    for route in routes{
-                        if route["Trips"].arrayValue.isEmpty{// if there is no bus trips for that route got to next
-                            continue
-                        }
-                        routeNo = route["RouteNo"].stringValue
-                        routeHeading = route["RouteHeading"].stringValue
-                        time = route["Trips"][0]["AdjustedScheduleTime"].stringValue
+                    if tmp["Trips"]?.dictionaryValue != nil{
+                        routeNo = tmp["RouteNo"]?.stringValue
+                        routeHeading = tmp["RouteHeading"]?.stringValue
+                        time = tmp["Trips"]!["Trip"][0]["AdjustedScheduleTime"].stringValue
                         bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
                         buses.append(bInfo)
+                    }
+                    
+                } else { //multi routes stops
+                    for route in routes{
+                        
+                        if !route["Trips"].arrayValue.isEmpty{// if there is no bus trips for that route got to next
+                            routeNo = route["RouteNo"].stringValue
+                            routeHeading = route["RouteHeading"].stringValue
+                            time = route["Trips"][0]["AdjustedScheduleTime"].stringValue
+                            bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
+                            buses.append(bInfo)
+                        }
+
                     }
                 }
 
@@ -147,11 +144,8 @@ class DataService{
                 print(error.debugDescription)
             }
             
-            
-            
         })
         apiTask.resume() // end of API call
-        
     }
     
     /*get stop number from json file

@@ -321,13 +321,14 @@
         <!--Help-->
         <scene sceneID="R7g-h5-e81">
             <objects>
-                <viewController id="VFC-VR-r8s" sceneMemberID="viewController">
+                <viewController id="VFC-VR-r8s" customClass="HelpViewController" customModule="catchBus" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XX2-3F-4Pq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" largeTitles="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JiV-Nr-PSF">
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" largeTitles="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KKe-7j-bJ4">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="barTintColor" red="0.81568627449999997" green="0.0078431372550000003" blue="0.1058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -336,32 +337,57 @@
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem title="Help" id="fp5-xk-NJb"/>
+                                    <navigationItem title="Help" id="puW-SA-y3G"/>
                                 </items>
                             </navigationBar>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hey come back later 🤓🤓" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="spe-cl-OR2">
-                                <rect key="frame" x="57" y="320" width="262" height="27.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eKS-Ix-g2u">
+                                <rect key="frame" x="0.0" y="396" width="375" height="222"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <view key="tableHeaderView" userInteractionEnabled="NO" contentMode="scaleToFill" id="6g4-o4-MQJ" userLabel="header">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="0.84999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                </view>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" editingAccessoryType="disclosureIndicator" textLabel="hZr-U3-fam" style="IBUITableViewCellStyleDefault" id="84d-QF-T1G">
+                                        <rect key="frame" x="0.0" y="29" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="84d-QF-T1G" id="Wfy-JL-uX5">
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hZr-U3-fam">
+                                                    <rect key="frame" x="15" y="0.0" width="325" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <sections/>
+                            </tableView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="iconBF" translatesAutoresizingMaskIntoConstraints="NO" id="bQw-AL-TCo">
+                                <rect key="frame" x="80" y="132" width="215" height="217"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="spe-cl-OR2" firstAttribute="centerY" secondItem="XX2-3F-4Pq" secondAttribute="centerY" id="5Kj-oT-9Wq"/>
-                            <constraint firstItem="spe-cl-OR2" firstAttribute="centerX" secondItem="XX2-3F-4Pq" secondAttribute="centerX" id="bTj-LX-zke"/>
-                            <constraint firstItem="JiV-Nr-PSF" firstAttribute="leading" secondItem="2CG-X3-DS3" secondAttribute="leading" id="cJh-e6-AfX"/>
-                            <constraint firstItem="JiV-Nr-PSF" firstAttribute="top" secondItem="XX2-3F-4Pq" secondAttribute="top" id="p8c-Aq-Rce"/>
-                            <constraint firstItem="JiV-Nr-PSF" firstAttribute="trailing" secondItem="2CG-X3-DS3" secondAttribute="trailing" id="y3X-Np-E2c"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="2CG-X3-DS3"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Help" image="help" id="hjH-y2-VrU"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="usefulLinksTable" destination="eKS-Ix-g2u" id="3RF-wN-ybO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AtG-a0-FCX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="905" y="877"/>
+            <point key="canvasLocation" x="904.79999999999995" y="876.61169415292363"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="C8u-a4-MgI">
@@ -396,6 +422,7 @@
         <image name="center" width="50" height="50"/>
         <image name="help" width="25" height="25"/>
         <image name="home" width="25" height="25"/>
+        <image name="iconBF" width="1024" height="1024"/>
         <image name="right1" width="75" height="75"/>
     </resources>
 </document>

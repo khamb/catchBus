@@ -214,6 +214,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.tableRefresher.attributedTitle = NSAttributedString(string: "updating bus information ...")
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.busesData.count

@@ -13,6 +13,7 @@ class FavouriteBuses{
     static let instance = FavouriteBuses()
     
     private(set) var favourites = [FavBusInfo]()
+    private(set) var favouriteStops = [String]()
 
     func addToFavourites(favBus: FavBusInfo)->Bool{
         let isFavourite = self.favourites.contains(where: { fav in return fav == favBus })

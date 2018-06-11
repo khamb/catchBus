@@ -17,11 +17,12 @@ class busInfoCell: UITableViewCell {
     
     override func awakeFromNib() {
         // Initialization code
+        super.awakeFromNib()
         self.shadowView.layer.cornerRadius = 4
         self.shadowView.layer.shadowOffset = CGSize(width: 0, height: 2)
         self.shadowView.layer.shadowColor = UIColor.darkGray.cgColor
         self.shadowView.layer.shadowOpacity = 0.5
-        super.awakeFromNib()
+
     }
     
     func initRow(busInfo: BusInfo){

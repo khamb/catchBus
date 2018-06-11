@@ -22,9 +22,7 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         
         self.stopDetailTable.dataSource = self
         self.stopDetailTable.delegate = self
-        self.stopDetailTable.rowHeight = 70
-       // self.stopDetailTable.register(UINib(nibName: "busInfoCell", bundle: nil), forCellReuseIdentifier: "busInfoCellId")
-        
+
         // Do any additional setup after loading the view.
         self.navigationItem.largeTitleDisplayMode = .never
         self.navigationItem.title = self.currentStop.stopName
@@ -74,7 +72,6 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
 
             } else {
                 DispatchQueue.main.async {
-                    //self.stopDetailTableActivityIndicator.removeFromSuperview()
                     self.stopDetailTableActivityIndicator.isHidden = true
                     self.configNoBusLabel()
                 }
@@ -107,18 +104,19 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         return 1
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.busesAtThisStop.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      
-        let start = CACurrentMediaTime()
         guard let cell = Bundle.main.loadNibNamed("busInfoCell", owner: self, options: nil)?.first as? busInfoCell else {return UITableViewCell()}
 
         cell.initRow(busInfo: self.busesAtThisStop[indexPath.row])
-        let end = CACurrentMediaTime()
-        print(end-start)
         return cell
     }
     
