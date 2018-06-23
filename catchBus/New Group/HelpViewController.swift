@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MessageUI
 
 class HelpViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -14,6 +15,7 @@ class HelpViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     @IBOutlet weak var usefulLinksTable: UITableView!
     let usefulLinks = ["How to use the app","Contact Us", "Terms and Privacy Policy", "Licences"]
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +24,9 @@ class HelpViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Do any additional setup after loading the view.
         self.usefulLinksTable.isScrollEnabled = false
         self.usefulLinksTable.reloadData()
+        
+        //assigning delegate to mailVC
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,14 +48,44 @@ class HelpViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.accessoryType = .disclosureIndicator
         return cell
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        switch indexPath.row {
+            case 0:
+                UIApplication.shared.open(URL(string: "http://www.khadim054.com")!, options: [:], completionHandler: nil)
+            case 1:
+                self.sendMail()
+            case 2:
+                UIApplication.shared.open(URL(string: "http://www.khadim054.com")!, options: [:], completionHandler: nil)
+            case 3:
+                UIApplication.shared.open(URL(string: "http://www.khadim054.com")!, options: [:], completionHandler: nil)
+            
+            default: break
+            
+        }
+        
     }
-    */
 
 }
+
+
+//-------mail extenstion------
+extension HelpViewController: MFMailComposeViewControllerDelegate{
+    
+    func sendMail(){
+        let mailVC = MFMailComposeViewController()
+        mailVC.mailComposeDelegate = self
+        if MFMailComposeViewController.canSendMail(){
+            mailVC.setToRecipients(["khadim1996@icloud.com"])
+            mailVC.setSubject("contact us -")
+            present(mailVC, animated: true, completion: nil)
+        }
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+}
+
+//-------end mail extenstion------

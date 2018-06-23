@@ -26,9 +26,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var busesData = [BusInfo]()
     var tableRefresher:UIRefreshControl = UIRefreshControl()
     var stop = Stop(stopNo: "", stopName: "")
+    var closestStopCoordinate: CLLocationCoordinate2D!
     static var allStops = [Stop]()
-    var session: WCSession!
-    
+
     @IBOutlet weak var tableActivityViewIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
@@ -63,6 +63,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //populate stops array
         self.initAllStopsArray()
+        
         
     }
 
@@ -142,10 +143,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         //first get closest stops' name45.422923,-75.681740
         DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
+            
             DataService.instance.getStopNumber(handler: { completed in
                 DataService.instance.getBusInfos(handler: { (data, stop) in
                     if !data.isEmpty{
                         self.busesData = data
+                        self.getDirectionToClosestStop(stopCoordinate: DataService.instance.closestStopCoordinate, stopName: stop.stopName)
+                        
                         handler(true,stop)
                     } else{
                         handler(false,stop)
@@ -259,6 +263,52 @@ extension ViewController: MKMapViewDelegate{
             mapView.setRegion(region, animated: true)
         }
     }
+    
+    /*
+     show direction to stop
+     
+     create direction request DR
+     choose DR source (mkplacemark)
+     choose DR destination
+     get direction mkdirection
+     */
+    func getDirectionToClosestStop(stopCoordinate: CLLocationCoordinate2D, stopName: String){
+        let request = MKDirectionsRequest()
+        
+        //Droping a pin at closest bus stop
+        let stopAnnotation = MKPointAnnotation()
+        stopAnnotation.coordinate = stopCoordinate
+        stopAnnotation.title = stopName
+        self.mapView.addAnnotation(stopAnnotation)
+        
+        let source = MKMapItem(placemark: MKPlacemark(coordinate: self.userCoordinates))
+        let destination = MKMapItem(placemark: MKPlacemark(coordinate: stopCoordinate))
+        
+        request.source = source
+        request.destination = destination
+        request.transportType = .walking
+        
+        let directions = MKDirections(request: request)
+        directions.calculate(completionHandler: { (response, error) in
+            if error == nil{
+                let route = response?.routes[0]
+                self.mapView.add((route?.polyline)!, level: MKOverlayLevel.aboveRoads)
+                
+                let routeRegion = MKCoordinateRegionForMapRect((route?.polyline.boundingMapRect)!)
+                self.mapView.setRegion(routeRegion, animated: true)
+            }
+        })
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = UIColor.red
+        renderer.lineWidth = 5
+        renderer.lineCap = .round
+        renderer.lineDashPattern = [8,8]
+        return renderer
+    }
+    
 }
 
 

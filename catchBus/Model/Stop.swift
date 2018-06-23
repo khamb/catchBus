@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Stop{
+struct Stop{ // change to a nsobject with a coordinate2d attribute
     var stopNo: String!
     var stopName: String!
     
@@ -17,3 +17,6 @@ struct Stop{
         self.stopName = stopName
     }
 }
+
+
+

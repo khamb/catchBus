@@ -8,14 +8,14 @@
 
 import Foundation
 import SwiftyJSON
-
+import CoreLocation
 
 class DataService{
     static let instance = DataService()
     
     /* function to get all buses infos around
      */
-    
+    private(set) var closestStopCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
     private(set) var closestStopsName = ""
     private(set) var closestStops = [Stop]()
     
@@ -179,8 +179,14 @@ class DataService{
             
             if error == nil{
                 let jsonResponse = JSON(data!)
-                //get closestbus stops
+                //get closestbus stop
                 self.closestStopsName = jsonResponse["results"][0]["name"].stringValue.uppercased()
+                
+                //get closest stop gps coordinate
+                let lat = jsonResponse["results"][0]["geometry"]["location"]["lat"].doubleValue
+                let long = jsonResponse["results"][0]["geometry"]["location"]["lng"].doubleValue
+                self.closestStopCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                
                 handler(true)
                 
             } else {
@@ -192,6 +198,7 @@ class DataService{
     }//end of getStopName
     
     func reset(){
+        self.closestStopCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
         self.closestStops = []
         self.closestStopsName = ""
     }
