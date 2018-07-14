@@ -2,7 +2,7 @@
 //  SearchViewController.swift
 //  catchBus
 //
-//  Created by Khadim Mbaye on 5/23/18.
+//  Created by Khadim Mbaye on 6/3/18.
 //  Copyright © 2018 Khadim Mbaye. All rights reserved.
 //
 

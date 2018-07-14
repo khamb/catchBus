@@ -2,7 +2,7 @@
 //  FavouriteBuses.swift
 //  catchBus
 //
-//  Created by Khadim Mbaye on 5/6/18.
+//  Created by Khadim Mbaye on 6/6/18.
 //  Copyright © 2018 Khadim Mbaye. All rights reserved.
 //
 
@@ -38,7 +38,7 @@ class FavouriteBuses{
     }
     
     func getFavBusInfo(no: Int, stop: Int){
-        let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStop?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&routeNo=\(no)&stopNo=\(stop)"
+        /*let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStop?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&routeNo=\(no)&stopNo=\(stop)"
         let urlRequest = URLRequest(url: URL(string: url)!)
         
         URLSession.shared.dataTask(with: urlRequest, completionHandler: { (data, response, error) in
@@ -49,7 +49,7 @@ class FavouriteBuses{
             } else {
                 print(error.debugDescription)
             }
-        }).resume()
+        }).resume()*/
         
     }
 }

@@ -2,7 +2,7 @@
 //  StopCell.swift
 //  catchBus
 //
-//  Created by Khadim Mbaye on 5/26/18.
+//  Created by Khadim Mbaye on 6/8/18.
 //  Copyright © 2018 Khadim Mbaye. All rights reserved.
 //
 

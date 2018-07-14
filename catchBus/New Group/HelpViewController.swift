@@ -2,7 +2,7 @@
 //  HelpViewController.swift
 //  catchBus
 //
-//  Created by Khadim Mbaye on 6/9/18.
+//  Created by Khadim Mbaye on 6/13/18.
 //  Copyright © 2018 Khadim Mbaye. All rights reserved.
 //
 
@@ -53,13 +53,13 @@ class HelpViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         switch indexPath.row {
             case 0:
-                UIApplication.shared.open(URL(string: "http://www.khadim054.com")!, options: [:], completionHandler: nil)
+                UIApplication.shared.open(URL(string: "http://khadim054.com/how-to-use-catchBus.html")!, options: [:], completionHandler: nil)
             case 1:
                 self.sendMail()
             case 2:
-                UIApplication.shared.open(URL(string: "http://www.khadim054.com")!, options: [:], completionHandler: nil)
+                UIApplication.shared.open(URL(string: "http://khadim054.com/how-to-use-catchBus.html")!, options: [:], completionHandler: nil)
             case 3:
-                UIApplication.shared.open(URL(string: "http://www.khadim054.com")!, options: [:], completionHandler: nil)
+                UIApplication.shared.open(URL(string: "http://khadim054.com/how-to-use-catchBus.html")!, options: [:], completionHandler: nil)
             
             default: break
             

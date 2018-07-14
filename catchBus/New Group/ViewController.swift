@@ -2,25 +2,24 @@
 //  ViewController.swift
 //  catchBus
 //
-//  Created by Khadim Mbaye on 3/25/18.
+//  Created by Khadim Mbaye on 5/25/18.
 //  Copyright © 2018 Khadim Mbaye. All rights reserved.
 //
 
 import UIKit
-import WatchConnectivity
 import MapKit
 import SwiftyJSON
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
  
     var locationManager = CLLocationManager()
     let locationAuthorization = CLLocationManager.authorizationStatus()
     var userCoordinates: CLLocationCoordinate2D!
     
-    let rightLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 30))
-    
     let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
+    let loadingAlert = UIAlertController(title: "Loading", message: nil, preferredStyle: .alert)
     
+    @IBOutlet weak var centerMapOnUserLocationBtn: UIButton!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var busesTable: UITableView!
     var busesData = [BusInfo]()
@@ -29,29 +28,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var closestStopCoordinate: CLLocationCoordinate2D!
     static var allStops = [Stop]()
 
-    @IBOutlet weak var tableActivityViewIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //***customize navigation bar
         navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon")) //title icon
-        
-        //adding right bar item
-
-        self.addNavbarRightLabel()
 
         //end of customize navigation bar ***
-        
         self.locationManager.delegate = self
-        self.initLocationServices()
         self.userCoordinates = self.locationManager.location?.coordinate
         
         //init mapView
-        self.mapView.delegate = self
-        self.mapView.showsUserLocation = true
-        self.mapView.showsBuildings = true
+        self.configureMapView()
         self.centerOnUserLocation()
+        self.centerMapOnUserLocationBtn.layer.cornerRadius = 0.5*self.centerMapOnUserLocationBtn.bounds.height
+        self.centerMapOnUserLocationBtn.layer.shadowOffset = CGSize(width: 0, height: 2)
+        self.centerMapOnUserLocationBtn.layer.shadowColor = UIColor.darkGray.cgColor
+        self.centerMapOnUserLocationBtn.layer.shadowOpacity = 0.5
         
         // configure busesTable
         self.busesTable.dataSource = self
@@ -75,31 +69,30 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.loadTableOrDisplayNoBusLabel()
+
+
+        self.present(self.loadingAlert, animated: true, completion:{
+            self.loadTableOrDisplayNoBusLabel()
+        })
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+4, execute: {
+            self.loadingAlert.dismiss(animated: true, completion: nil)
+        })
     
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        self.userCoordinates = locations[0].coordinate
-        self.locationManager.stopUpdatingLocation()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        self.locationManager.stopUpdatingLocation()
-        print(error)
-    }
     
     @IBAction func onRefreshTapped(_ sender: Any) {
-        self.centerOnUserLocation()
-        self.locationManager.startUpdatingLocation()
-        self.loadTableOrDisplayNoBusLabel()
-    }
-    
-    func addNavbarRightLabel(){
-        rightLabel.textColor = UIColor.white
-        rightLabel.textAlignment = .center
-        rightLabel.adjustsFontSizeToFitWidth = true
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightLabel)
+        present(self.loadingAlert, animated: true, completion: {
+            self.centerOnUserLocation()
+            //self.locationManager.startUpdatingLocation()
+            self.locationManager.requestLocation()
+            self.loadTableOrDisplayNoBusLabel()
+        })
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+4, execute: {
+            self.loadingAlert.dismiss(animated: true, completion: nil)
+        })
     }
     
     private func initAllStopsArray(){
@@ -116,36 +109,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     }
     
-    func initLocationServices(){
-        if self.locationAuthorization == .notDetermined{
-            self.locationManager.requestAlwaysAuthorization()
-        } else {
-            return
-        }
-    }
-    
-    func userCoordinatesToString()->String{
-        var latitude = Double(self.userCoordinates.latitude)
-        latitude = floor(pow(10.0, 6) * latitude)/pow(10.0, 6)
-        var longitude = Double(self.userCoordinates.longitude)
-        longitude = floor(pow(10.0, 6) * longitude)/pow(10.0, 6)
-        let toString = String(latitude)+","+String(longitude)
-        return toString
-    }
 
-    @IBAction func centerBtnPressed(_ sender: Any) {
-        if self.locationAuthorization == .authorizedAlways || self.locationAuthorization == .authorizedWhenInUse{
-            self.centerOnUserLocation()
-        }
-    }
 
     func loadTable(handler: @escaping (_ completed: Bool,_ closest: Stop)->()){
 
-        //first get closest stops' name45.422923,-75.681740
+        //first get closest stops' name45.415703,-75.668875
         DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
-            
             DataService.instance.getStopNumber(handler: { completed in
-                DataService.instance.getBusInfos(handler: { (data, stop) in
+                DataService.instance.getBusInfoAtStop(stops: DataService.instance.closestStops, handler: { data in
+                    let stop = DataService.instance.closestStops[0]
                     if !data.isEmpty{
                         self.busesData = data
                         self.getDirectionToClosestStop(stopCoordinate: DataService.instance.closestStopCoordinate, stopName: stop.stopName)
@@ -157,7 +129,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
                 })
             })
-            
         })
         
         DataService.instance.reset()
@@ -166,28 +137,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func loadTableOrDisplayNoBusLabel(){ // helper to refactor code and avoid to copy all the code over and over
         
-
         self.loadTable(handler: { completed, closestStop in
             if completed{
                 DispatchQueue.main.async{
                     UIApplication.shared.beginIgnoringInteractionEvents()
-                    self.tableActivityViewIndicator.startAnimating()
-                    self.noBusLabel.isHidden = true
                     
                     //update stop name on
                     self.stop = closestStop
-                    self.rightLabel.text = "🚏"+closestStop.stopName
                     self.busesTable.reloadData()
                     
                     DispatchQueue.main.asyncAfter(deadline: .now()+1, execute: {
-                        self.tableActivityViewIndicator.stopAnimating()
                         UIApplication.shared.endIgnoringInteractionEvents()
                     })
                 }
             } else{
                 DispatchQueue.main.async {
-                    self.tableActivityViewIndicator.isHidden = true
-                    self.rightLabel.text = "🚏"+closestStop.stopName
                     self.setupNoBusLabel()
                 }
             }
@@ -209,7 +173,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.noBusLabel.text = "❌ No bus Available at this stop right now❗️"
         self.noBusLabel.center.x = self.busesTable.center.x
         self.noBusLabel.center.y = self.busesTable.center.y-30
-        self.view.addSubview(self.noBusLabel)
+        self.busesTable.backgroundView = self.noBusLabel
     }
     
     func initTableRefresher(){
@@ -222,8 +186,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return 70
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.stop.stopName
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.busesData.isEmpty{
+            tableView.backgroundView?.isHidden = false
+        }else{
+            tableView.backgroundView?.isHidden = true
+        }
         return self.busesData.count
     }
     
@@ -233,13 +206,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             if FavouriteBuses.instance.addToFavourites(favBus: favBus){
                 let alert = UIAlertController(title: "Add to favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
-                self.present(alert, animated: true, completion:nil)
-                alert.dismiss(animated: true, completion: nil)
+                self.present(alert, animated: true, completion:{
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
+                        alert.dismiss(animated: true, completion: nil)
+                    })
+                })
                 completed(true)
             } else {
                 let alert = UIAlertController(title: "Add to favourites", message: "❌ ALREADY IN YOUR FAVOURITES!", preferredStyle: .alert)
-                self.present(alert, animated: true, completion:nil)
-                 alert.dismiss(animated: true, completion: nil)
+                self.present(alert, animated: true, completion:{
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
+                        alert.dismiss(animated: true, completion: nil)
+                    })
+                })
+
                 completed(true)
             }
         }
@@ -252,14 +232,46 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.initRow(busInfo: self.busesData[indexPath.row])
         return cell
     }
+}
+
+extension ViewController: CLLocationManagerDelegate{
     
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.userCoordinates = locations[0].coordinate
+        self.locationManager.stopUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        self.locationManager.stopUpdatingLocation()
+        print(error)
+    }
+    
+    func userCoordinatesToString()->String{
+        var latitude = Double(self.userCoordinates.latitude)
+        latitude = floor(pow(10.0, 6) * latitude)/pow(10.0, 6)
+        var longitude = Double(self.userCoordinates.longitude)
+        longitude = floor(pow(10.0, 6) * longitude)/pow(10.0, 6)
+        let toString = String(latitude)+","+String(longitude)
+        return toString
+    }
+    
+    @IBAction func centerBtnPressed(_ sender: Any) {
+        self.centerOnUserLocation()
+    }
 }
 
 extension ViewController: MKMapViewDelegate{
     
+    func configureMapView(){
+        self.mapView.delegate = self
+        self.mapView.showsUserLocation = true
+        self.mapView.showsBuildings = true
+        self.mapView.userTrackingMode = .followWithHeading
+    }
+    
     func centerOnUserLocation(){
         if let location = self.locationManager.location?.coordinate{
-            let region = MKCoordinateRegionMakeWithDistance(location, 1000, 1000)
+            let region = MKCoordinateRegionMakeWithDistance(location, 800, 800)
             mapView.setRegion(region, animated: true)
         }
     }
@@ -289,6 +301,7 @@ extension ViewController: MKMapViewDelegate{
         request.transportType = .walking
         
         let directions = MKDirections(request: request)
+        
         directions.calculate(completionHandler: { (response, error) in
             if error == nil{
                 let route = response?.routes[0]
@@ -298,6 +311,7 @@ extension ViewController: MKMapViewDelegate{
                 self.mapView.setRegion(routeRegion, animated: true)
             }
         })
+        
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -305,7 +319,6 @@ extension ViewController: MKMapViewDelegate{
         renderer.strokeColor = UIColor.red
         renderer.lineWidth = 5
         renderer.lineCap = .round
-        renderer.lineDashPattern = [8,8]
         return renderer
     }
     

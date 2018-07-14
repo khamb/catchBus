@@ -2,7 +2,7 @@
 //  StopDetailsViewController.swift
 //  catchBus
 //
-//  Created by Khadim Mbaye on 5/26/18.
+//  Created by Khadim Mbaye on 6/3/18.
 //  Copyright © 2018 Khadim Mbaye. All rights reserved.
 //
 
@@ -56,16 +56,14 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     
     func loadStopDetailTable(){//make api request and populate the table datasource
 
-        DataService.instance.getBusInfoAtStop(withStopCode: self.currentStop.stopNo, handler: { data in
+        DataService.instance.getBusInfoAtStop(stops: [self.currentStop], handler: { data in
             if !data.isEmpty{
                 self.busesAtThisStop = data
                 
                 DispatchQueue.main.async {
                     UIApplication.shared.beginIgnoringInteractionEvents()
                     self.stopDetailTableActivityIndicator.startAnimating()
-
                     self.stopDetailTable.reloadData() //try to reload visible rows
-
                     self.stopDetailTableActivityIndicator.stopAnimating()
                     UIApplication.shared.endIgnoringInteractionEvents()
                 }
@@ -83,12 +81,10 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     
     
     @objc func refreshStopsTable(){
-        UIApplication.shared.beginIgnoringInteractionEvents()
         self.stopDetailTable.refreshControl?.beginRefreshing()
         self.loadStopDetailTable()
         DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
             self.stopDetailTable.refreshControl?.endRefreshing()
-            UIApplication.shared.endIgnoringInteractionEvents()
         })
 
     }

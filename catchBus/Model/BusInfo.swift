@@ -2,7 +2,7 @@
 //  BusInfo.swift
 //  catchBus WatchKit Extension
 //
-//  Created by Khadim Mbaye on 3/27/18.
+//  Created by Khadim Mbaye on 5/27/18.
 //  Copyright © 2018 Khadim Mbaye. All rights reserved.
 //
 
@@ -17,8 +17,12 @@ class BusInfo{
     init(no: String, routeHeading: String, time: String){
         self.no = no
         self.routeHeading = routeHeading
-        self.time = time
-        
+        if time==""{
+            self.time = "-";
+        }else{
+            self.time = time
+        }
+
     }
     
   

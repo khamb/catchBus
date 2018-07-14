@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  catchBus
 //
-//  Created by Khadim Mbaye on 3/25/18.
+//  Created by Khadim Mbaye on 5/25/18.
 //  Copyright © 2018 Khadim Mbaye. All rights reserved.
 //
 
@@ -16,6 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        //check if gps is activated
+        if !UserDefaults.standard.bool(forKey: "isGPSActivated"){
+            window?.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "OnboardingViewController")
+        }else{
+            window?.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TabBarController")
+        }
+        
         return true
     }
 

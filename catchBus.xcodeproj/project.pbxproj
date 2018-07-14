@@ -22,6 +22,7 @@
 		F8DB931620B6501900DFAB1C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8DB931520B6501900DFAB1C /* SearchViewController.swift */; };
 		F8E5CB4B206ECAFE007E5820 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */; };
 		F8E62E2F209E73D000B6505B /* stops.json in Resources */ = {isa = PBXBuildFile; fileRef = F8E62E2D209E734D00B6505B /* stops.json */; };
+		F8EBEB4420F7ECFA00A2216E /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EBEB4320F7ECFA00A2216E /* OnboardingViewController.swift */; };
 		F8F231AD2079CCA800082636 /* busInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F231AC2079CCA800082636 /* busInfoCell.swift */; };
 		F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C8E287206B26A100520784 /* BusInfo.swift */; };
 		F8F231AF2079CFD000082636 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89CFD93206DC4A600B9ACC8 /* DataService.swift */; };
@@ -66,6 +67,7 @@
 		F8DB931520B6501900DFAB1C /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchViewController.swift; path = catchBus/Controller/SearchViewController.swift; sourceTree = SOURCE_ROOT; };
 		F8E5CB4A206ECAFE007E5820 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F8E62E2D209E734D00B6505B /* stops.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stops.json; sourceTree = "<group>"; };
+		F8EBEB4320F7ECFA00A2216E /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		F8F231AC2079CCA800082636 /* busInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = busInfoCell.swift; sourceTree = "<group>"; };
 		F8FAA6E420BA19B800DD5784 /* StopCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopCell.swift; sourceTree = "<group>"; };
 		F8FAA6E620BA2C2100DD5784 /* StopDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopDetailsViewController.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				F8DB931520B6501900DFAB1C /* SearchViewController.swift */,
 				F8FAA6E620BA2C2100DD5784 /* StopDetailsViewController.swift */,
 				F870DEAA20CCD45800CC37D0 /* HelpViewController.swift */,
+				F8EBEB4320F7ECFA00A2216E /* OnboardingViewController.swift */,
 			);
 			name = Controller;
 			path = "New Group";
@@ -326,6 +329,7 @@
 				F8F231AE2079CD4900082636 /* BusInfo.swift in Sources */,
 				F85EB88120B91159009CC397 /* Stop.swift in Sources */,
 				F8F231AD2079CCA800082636 /* busInfoCell.swift in Sources */,
+				F8EBEB4420F7ECFA00A2216E /* OnboardingViewController.swift in Sources */,
 				F8F231AF2079CFD000082636 /* DataService.swift in Sources */,
 				F8FAA6E520BA19B800DD5784 /* StopCell.swift in Sources */,
 			);

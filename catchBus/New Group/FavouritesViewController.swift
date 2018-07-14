@@ -2,7 +2,7 @@
 //  FavouritesViewController.swift
 //  catchBus
 //
-//  Created by Khadim Mbaye on 5/6/18.
+//  Created by Khadim Mbaye on 6/6/18.
 //  Copyright © 2018 Khadim Mbaye. All rights reserved.
 //
 
@@ -19,6 +19,9 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         self.favouritesTable.delegate = self
         self.favouritesTable.dataSource = self
         self.favouritesTable.rowHeight = 70
+        
+        //setting up no label view
+        self.initNoFavLabel()
  
     }
 
@@ -29,25 +32,27 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if FavouriteBuses.instance.favourites.isEmpty{
-            if self.noFavLabel.isHidden{
-                self.noFavLabel.isHidden = false
-            }
-            noFavLabel.text = "❌ I see no favourites 🧐🧐🧐"
-            noFavLabel.adjustsFontSizeToFitWidth = true
-            noFavLabel.textAlignment = .center
-            noFavLabel.center.x = self.view.center.x
-            noFavLabel.center.y = self.view.center.y-30
-            self.view.addSubview(noFavLabel)
-        } else {
-            self.noFavLabel.isHidden = true
+
             self.favouritesTable.reloadData()
-        }
 
     }
     
+    private func initNoFavLabel(){
+        self.noFavLabel.text = "❌ I see no favourites 🧐🧐🧐"
+        self.noFavLabel.adjustsFontSizeToFitWidth = true
+        self.noFavLabel.textAlignment = .center
+        self.noFavLabel.center.x = self.view.center.x
+        self.noFavLabel.center.y = self.view.center.y-30
+        self.favouritesTable.backgroundView = self.noFavLabel
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if FavouriteBuses.instance.favourites.isEmpty{
+            tableView.backgroundView?.isHidden = false
+        } else {
+            tableView.backgroundView?.isHidden = true
+        }
+        
         return FavouriteBuses.instance.favourites.count
     }
     
@@ -68,7 +73,9 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
                 tableView.deleteRows(at: [indexPath], with: .automatic)
                 let successAlert = UIAlertController(title: "Removed frm favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
                 self.present(successAlert, animated: true, completion: {
-                    successAlert.dismiss(animated: true, completion: nil)
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
+                        successAlert.dismiss(animated: true, completion: nil)
+                    })
                 })
                 completed(true)
             }

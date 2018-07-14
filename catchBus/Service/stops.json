@@ -2573,6 +2573,10 @@
         },
         {
             "stop_code": 3022,
+            "stop_name": "LEES STATION"
+        },
+        {
+            "stop_code": 3022,
             "stop_name": "LEES 4D"
         },
         {
