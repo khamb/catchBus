@@ -70,6 +70,9 @@ class DataService{
                     
                     //sort by ascending arrival time
                     buses.sort(by: {(bus1, bus2) in
+                        if bus1.time == "-" || bus2.time == "-"{
+                            return false
+                        }
                         return Int(bus1.time)! < Int(bus2.time)!
                     })
                     

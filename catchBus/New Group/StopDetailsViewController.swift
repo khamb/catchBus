@@ -116,5 +116,32 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         return cell
     }
     
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let favorite = UIContextualAction(style: .normal, title: "") { (action, view, completed) in
+            let favBus = FavBusInfo(busInfo: self.busesAtThisStop[indexPath.row], stop: self.currentStop)
+            
+            if FavouriteBuses.instance.addToFavourites(favBus: favBus){
+                let alert = UIAlertController(title: "✅", message: "SUCCESS!", preferredStyle: .alert)
+                self.present(alert, animated: true, completion:{
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.75, execute: {
+                        alert.dismiss(animated: true, completion: nil)
+                    })
+                })
+                completed(true)
+            } else {
+                let alert = UIAlertController(title: "❌", message: "ALREADY IN YOUR FAVOURITES!", preferredStyle: .alert)
+                self.present(alert, animated: true, completion:{
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.75, execute: {
+                        alert.dismiss(animated: true, completion: nil)
+                    })
+                })
+                
+                completed(true)
+            }
+        }
+        favorite.image = UIImage(named: "fav")
+        return UISwipeActionsConfiguration(actions: [favorite])
+    }
+    
 
 }

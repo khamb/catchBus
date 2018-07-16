@@ -15,6 +15,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var locationManager = CLLocationManager()
     let locationAuthorization = CLLocationManager.authorizationStatus()
     var userCoordinates: CLLocationCoordinate2D!
+    var closestStopCoordinates: CLLocationCoordinate2D!
     
     let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
     let loadingAlert = UIAlertController(title: "Loading", message: nil, preferredStyle: .alert)
@@ -25,7 +26,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var busesData = [BusInfo]()
     var tableRefresher:UIRefreshControl = UIRefreshControl()
     var stop = Stop(stopNo: "", stopName: "")
-    var closestStopCoordinate: CLLocationCoordinate2D!
     static var allStops = [Stop]()
 
     
@@ -85,8 +85,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBAction func onRefreshTapped(_ sender: Any) {
         present(self.loadingAlert, animated: true, completion: {
             self.centerOnUserLocation()
-            //self.locationManager.startUpdatingLocation()
             self.locationManager.requestLocation()
+            self.userCoordinates = self.locationManager.location?.coordinate
             self.loadTableOrDisplayNoBusLabel()
         })
         
@@ -115,13 +115,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         //first get closest stops' name45.415703,-75.668875
         DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
+            self.closestStopCoordinates = DataService.instance.closestStopCoordinate
             DataService.instance.getStopNumber(handler: { completed in
                 DataService.instance.getBusInfoAtStop(stops: DataService.instance.closestStops, handler: { data in
                     let stop = DataService.instance.closestStops[0]
                     if !data.isEmpty{
                         self.busesData = data
-                        self.getDirectionToClosestStop(stopCoordinate: DataService.instance.closestStopCoordinate, stopName: stop.stopName)
-                        
                         handler(true,stop)
                     } else{
                         handler(false,stop)
@@ -144,6 +143,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     
                     //update stop name on
                     self.stop = closestStop
+                    self.getDirectionToClosestStop(stopCoordinate: self.closestStopCoordinates, stopName: self.stop.stopName)
                     self.busesTable.reloadData()
                     
                     DispatchQueue.main.asyncAfter(deadline: .now()+1, execute: {
@@ -205,17 +205,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let favBus = FavBusInfo(busInfo: self.busesData[indexPath.row], stop: self.stop)
             
             if FavouriteBuses.instance.addToFavourites(favBus: favBus){
-                let alert = UIAlertController(title: "Add to favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
+                let alert = UIAlertController(title: "✅", message: "SUCCESS!", preferredStyle: .alert)
                 self.present(alert, animated: true, completion:{
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.75, execute: {
                         alert.dismiss(animated: true, completion: nil)
                     })
                 })
                 completed(true)
             } else {
-                let alert = UIAlertController(title: "Add to favourites", message: "❌ ALREADY IN YOUR FAVOURITES!", preferredStyle: .alert)
+                let alert = UIAlertController(title: "❌", message: "ALREADY IN YOUR FAVOURITES!", preferredStyle: .alert)
                 self.present(alert, animated: true, completion:{
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.75, execute: {
                         alert.dismiss(animated: true, completion: nil)
                     })
                 })
@@ -285,6 +285,8 @@ extension ViewController: MKMapViewDelegate{
      get direction mkdirection
      */
     func getDirectionToClosestStop(stopCoordinate: CLLocationCoordinate2D, stopName: String){
+        self.removeAllAnnotationsAndOvarlays()
+        
         let request = MKDirectionsRequest()
         
         //Droping a pin at closest bus stop
@@ -299,6 +301,7 @@ extension ViewController: MKMapViewDelegate{
         request.source = source
         request.destination = destination
         request.transportType = .walking
+        
         
         let directions = MKDirections(request: request)
         
@@ -320,6 +323,13 @@ extension ViewController: MKMapViewDelegate{
         renderer.lineWidth = 5
         renderer.lineCap = .round
         return renderer
+    }
+    
+    func removeAllAnnotationsAndOvarlays(){
+        if !self.mapView.annotations.isEmpty{
+            mapView.removeAnnotations(mapView.annotations)
+            mapView.removeOverlays(mapView.overlays)
+        }
     }
     
 }

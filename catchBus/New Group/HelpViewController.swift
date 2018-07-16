@@ -57,9 +57,9 @@ class HelpViewController: UIViewController, UITableViewDelegate, UITableViewData
             case 1:
                 self.sendMail()
             case 2:
-                UIApplication.shared.open(URL(string: "http://khadim054.com/how-to-use-catchBus.html")!, options: [:], completionHandler: nil)
+                UIApplication.shared.open(URL(string: "http://khadim054.com/how-to-use-catchBus.html/#")!, options: [:], completionHandler: nil)
             case 3:
-                UIApplication.shared.open(URL(string: "http://khadim054.com/how-to-use-catchBus.html")!, options: [:], completionHandler: nil)
+                UIApplication.shared.open(URL(string: "http://khadim054.com/how-to-use-catchBus.html/#")!, options: [:], completionHandler: nil)
             
             default: break
             

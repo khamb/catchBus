@@ -71,15 +71,16 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
 
             if FavouriteBuses.instance.removeFromFavourites(favBus: favBus){
                 tableView.deleteRows(at: [indexPath], with: .automatic)
-                let successAlert = UIAlertController(title: "Removed frm favourites", message: "✅ SUCCESS!", preferredStyle: .alert)
+                let successAlert = UIAlertController(title: "✅", message: "SUCCESS!", preferredStyle: .alert)
                 self.present(successAlert, animated: true, completion: {
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.75, execute: {
                         successAlert.dismiss(animated: true, completion: nil)
                     })
                 })
                 completed(true)
             }
         })
+        delete.image = UIImage(named: "delete")
         return UISwipeActionsConfiguration(actions: [delete])
     }
 
