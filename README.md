@@ -1,7 +1,7 @@
 # catchBus
 
 ## Description
-This app gives user closest bus informations. It has a apple watch apple watch version (see screenshots).
+This app gives user find bus information and bus stations of OC Transpo Transit System.
 
 ## APIs & Frameworks
 - OC Transpo API
