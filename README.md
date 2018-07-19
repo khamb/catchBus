@@ -6,13 +6,14 @@ This app gives user closest bus informations. It has a apple watch apple watch v
 ## APIs & Frameworks
 - OC Transpo API
 - Google Places API
-- WatchConnectivity
+- MapKit
 - CoreLocation
 
 ## CocoaPods
-- Alamofire
 - SwiftyJSON
 
 ## Screenshots
-<img width="217" alt="screen shot 2018-04-08 at 4 05 43 pm" src="https://user-images.githubusercontent.com/23692391/38471972-c16d4fe8-3b46-11e8-855e-e1687df40fcb.png">
-<img width="401" alt="screen shot 2018-04-08 at 4 00 48 pm" src="https://user-images.githubusercontent.com/23692391/38471975-d0f5fc6c-3b46-11e8-9d6c-5394f6889196.png">
+<img src="https://user-images.githubusercontent.com/23692391/42945488-8ce14424-8b36-11e8-9758-74a45e2cfff6.PNG" width=225 height=400>
+<img src="https://user-images.githubusercontent.com/23692391/42945642-e03fdcde-8b36-11e8-8463-d4a3c4a260a9.PNG" width=225 height=400>
+<img src="https://user-images.githubusercontent.com/23692391/42945643-e0551c3e-8b36-11e8-8234-b6af6df6081c.PNG" width=225 height=400>
+<img src="https://user-images.githubusercontent.com/23692391/42945641-e02ef626-8b36-11e8-9da0-e889dbdc0962.PNG" width=225 height=400>
