@@ -38,9 +38,10 @@ class DataService{
                     var time: String!
                     var bInfo: BusInfo!
                     
+                    guard let data = data else {return}
                     
-                    let jsonResponse = try! JSON(data: data!)
-                    
+                    let jsonResponse = try! JSON(data: data)
+                
                     let routes = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].arrayValue
                     
                     if routes.isEmpty{ //single route stops

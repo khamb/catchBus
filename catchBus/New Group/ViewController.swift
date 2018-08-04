@@ -139,16 +139,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.loadTable(handler: { completed, closestStop in
             if completed{
                 DispatchQueue.main.async{
-                    UIApplication.shared.beginIgnoringInteractionEvents()
-                    
                     //update stop name on
                     self.stop = closestStop
                     self.getDirectionToClosestStop(stopCoordinate: self.closestStopCoordinates, stopName: self.stop.stopName)
                     self.busesTable.reloadData()
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now()+1, execute: {
-                        UIApplication.shared.endIgnoringInteractionEvents()
-                    })
                 }
             } else{
                 DispatchQueue.main.async {
@@ -171,6 +166,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func setupNoBusLabel(){
         self.noBusLabel.text = "❌ No bus Available at this stop right now❗️"
+        self.noBusLabel.textAlignment = .center
         self.noBusLabel.center.x = self.busesTable.center.x
         self.noBusLabel.center.y = self.busesTable.center.y-30
         self.busesTable.backgroundView = self.noBusLabel

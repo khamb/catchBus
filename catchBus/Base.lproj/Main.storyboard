@@ -122,7 +122,7 @@
                                 <rect key="frame" x="0.0" y="106" width="375" height="623"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="busInfoCellIdentifier" rowHeight="59" id="ztB-oZ-I5G">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="busInfoCellIdentifier" rowHeight="59" id="ztB-oZ-I5G">
                                         <rect key="frame" x="0.0" y="28" width="375" height="59"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ztB-oZ-I5G" id="lJS-Hj-V7l">
@@ -277,7 +277,7 @@
                                 <rect key="frame" x="0.0" y="160" width="375" height="652"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StopCell" rowHeight="66" id="qBB-nv-HvW" customClass="StopCell" customModule="catchBus" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StopCell" rowHeight="66" id="qBB-nv-HvW" customClass="StopCell" customModule="catchBus" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qBB-nv-HvW" id="4gS-ls-URP">
@@ -356,7 +356,7 @@
                                 <rect key="frame" x="0.0" y="140" width="375" height="672"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="busInfoCellIdentifier" rowHeight="55" id="5TM-zJ-x7F" customClass="busInfoCell" customModule="catchBus" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="busInfoCellIdentifier" rowHeight="55" id="5TM-zJ-x7F" customClass="busInfoCell" customModule="catchBus" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5TM-zJ-x7F" id="Id0-76-fx5">
@@ -366,15 +366,9 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="vUx-JD-CMt">
-                                <rect key="frame" x="169" y="140" width="37" height="37"/>
-                                <color key="color" red="0.81568627449999997" green="0.0078431372550000003" blue="0.1058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="vUx-JD-CMt" firstAttribute="top" secondItem="esc-DA-Vyz" secondAttribute="top" id="6iG-Nt-dOr"/>
-                            <constraint firstItem="vUx-JD-CMt" firstAttribute="centerX" secondItem="mJz-oC-wPv" secondAttribute="centerX" id="JeK-uJ-2ao"/>
                             <constraint firstAttribute="bottom" secondItem="JKB-SU-R0m" secondAttribute="bottom" id="aQW-tS-Nl3"/>
                             <constraint firstItem="JKB-SU-R0m" firstAttribute="trailing" secondItem="esc-DA-Vyz" secondAttribute="trailing" id="bJr-Y8-EQY"/>
                             <constraint firstItem="JKB-SU-R0m" firstAttribute="top" secondItem="esc-DA-Vyz" secondAttribute="top" id="tUZ-F7-jZY"/>
@@ -384,7 +378,6 @@
                     </view>
                     <connections>
                         <outlet property="stopDetailTable" destination="JKB-SU-R0m" id="ZTk-cK-nTa"/>
-                        <outlet property="stopDetailTableActivityIndicator" destination="vUx-JD-CMt" id="KCt-I1-gxV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kZY-Zq-Nzp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -424,7 +417,7 @@
                                     <color key="backgroundColor" white="0.84999999999999998" alpha="1" colorSpace="calibratedWhite"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" editingAccessoryType="disclosureIndicator" textLabel="hZr-U3-fam" style="IBUITableViewCellStyleDefault" id="84d-QF-T1G">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" editingAccessoryType="disclosureIndicator" textLabel="hZr-U3-fam" style="IBUITableViewCellStyleDefault" id="84d-QF-T1G">
                                         <rect key="frame" x="0.0" y="29" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="84d-QF-T1G" id="Wfy-JL-uX5">

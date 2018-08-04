@@ -11,12 +11,13 @@ import UIKit
 class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
 
-    @IBOutlet weak var stopDetailTableActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var stopDetailTable: UITableView!
     var currentStop = Stop(stopNo: "", stopName: "")
     var busesAtThisStop = [BusInfo]()
     
     let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
+    let loadingAlert = UIAlertController(title: "Loading", message: nil, preferredStyle: .alert)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,11 +32,15 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        self.loadStopDetailTable()
-
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.present(self.loadingAlert, animated: true, completion:{
+            self.loadStopDetailTable()
+            
+        })
+        DispatchQueue.main.asyncAfter(deadline: .now()+4, execute: {
+            self.loadingAlert.dismiss(animated: true, completion: nil)
+        })
     }
 
     
@@ -50,32 +55,24 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
         self.noBusLabel.textAlignment = .center
         self.noBusLabel.center.x = self.stopDetailTable.center.x
         self.noBusLabel.center.y = self.stopDetailTable.center.y-30
-        self.view.addSubview(self.noBusLabel)
+        self.stopDetailTable.backgroundView = self.noBusLabel
     }
     
     
     func loadStopDetailTable(){//make api request and populate the table datasource
 
         DataService.instance.getBusInfoAtStop(stops: [self.currentStop], handler: { data in
-            if !data.isEmpty{
-                self.busesAtThisStop = data
+            DispatchQueue.main.async {
+                if !data.isEmpty{
+                    self.busesAtThisStop = data
                 
-                DispatchQueue.main.async {
-                    UIApplication.shared.beginIgnoringInteractionEvents()
-                    self.stopDetailTableActivityIndicator.startAnimating()
                     self.stopDetailTable.reloadData() //try to reload visible rows
-                    self.stopDetailTableActivityIndicator.stopAnimating()
-                    UIApplication.shared.endIgnoringInteractionEvents()
-                }
-
-            } else {
-                DispatchQueue.main.async {
-                    self.stopDetailTableActivityIndicator.isHidden = true
+                    
+                } else {
                     self.configNoBusLabel()
                 }
             }
         })
-
         
     }
     
@@ -92,7 +89,7 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     func setupTableRefresher(){
         self.stopDetailTable.refreshControl = UIRefreshControl()
         self.stopDetailTable.refreshControl?.addTarget(self, action: #selector(StopDetailsViewController.self.refreshStopsTable), for: .valueChanged)
-        self.stopDetailTable.refreshControl?.attributedTitle = NSAttributedString(string: "reloading ...")
+        self.stopDetailTable.refreshControl?.attributedTitle = NSAttributedString(string: "Reloading ...")
     }
     
     
@@ -106,6 +103,11 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.busesAtThisStop.isEmpty{
+            self.stopDetailTable.backgroundView?.isHidden = false
+        }else{
+           self.stopDetailTable.backgroundView?.isHidden = true
+        }
         return self.busesAtThisStop.count
     }
     
