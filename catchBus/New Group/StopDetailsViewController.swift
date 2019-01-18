@@ -12,7 +12,7 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     
 
     @IBOutlet weak var stopDetailTable: UITableView!
-    var currentStop = Stop(stopNo: "", stopName: "")
+    var currentStop = Stop(stopNo: 0, stopName: "")
     var busesAtThisStop = [BusInfo]()
     
     let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
@@ -34,13 +34,8 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.present(self.loadingAlert, animated: true, completion:{
-            self.loadStopDetailTable()
-            
-        })
-        DispatchQueue.main.asyncAfter(deadline: .now()+4, execute: {
-            self.loadingAlert.dismiss(animated: true, completion: nil)
-        })
+        self.loadStopDetailTable()
+        
     }
 
     
@@ -60,20 +55,21 @@ class StopDetailsViewController: UIViewController, UITableViewDelegate, UITableV
     
     
     func loadStopDetailTable(){//make api request and populate the table datasource
-
-        DataService.instance.getBusInfoAtStop(stops: [self.currentStop], handler: { data in
-            DispatchQueue.main.async {
-                if !data.isEmpty{
-                    self.busesAtThisStop = data
-                
-                    self.stopDetailTable.reloadData() //try to reload visible rows
-                    
-                } else {
-                    self.configNoBusLabel()
-                }
-            }
+        self.present(self.loadingAlert, animated: true, completion:{
+            DataService.instance.getBusInfoAtStop(stops: [self.currentStop], handler: { data in
+                    if !data.isEmpty{
+                        self.busesAtThisStop = data
+                        DispatchQueue.main.async{
+                            self.stopDetailTable.reloadData() //try to reload visible rows
+                            self.loadingAlert.dismiss(animated: true, completion: nil)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.configNoBusLabel()
+                        }
+                    }
+            })
         })
-        
     }
     
     

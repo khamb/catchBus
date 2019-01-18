@@ -8,10 +8,10 @@
 
 import Foundation
 
-class BusInfo{
-    var no: String
-    var routeHeading: String
-    var time: String
+class BusInfo: Codable{
+    let no: String
+    let routeHeading: String
+    let time: String
 
     
     init(no: String, routeHeading: String, time: String){

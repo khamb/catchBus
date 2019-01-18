@@ -8,14 +8,19 @@
 
 import Foundation
 
-struct Stop{ // change to a nsobject with a coordinate2d attribute
-    var stopNo: String!
-    var stopName: String!
+struct Stop: Codable{ // change to a nsobject with a coordinate2d attribute
+    let stopNo: Int
+    let stopName: String
     
-    init(stopNo: String, stopName: String) {
+    enum CodingKeys: String, CodingKey {
+        case stopNo = "stop_code"
+        case stopName = "stop_name"
+    }
+    
+    /*init(stopNo: String, stopName: String) {
         self.stopNo = stopNo
         self.stopName = stopName
-    }
+    }*/
 }
 
 

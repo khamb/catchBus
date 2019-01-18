@@ -16,6 +16,10 @@ class FavBusInfo: BusInfo {
         self.stop = stop
     }
     
+    required init(from decoder: Decoder) throws {
+        fatalError("init(from:) has not been implemented")
+    }
+    
     func getBusStruct()->BusInfo{
         return BusInfo(no: self.no, routeHeading: self.routeHeading, time: self.time)
     }

@@ -24,12 +24,22 @@ class DataService{
         var buses = [BusInfo]()
         
         for stop in stops{
-            let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStopAllRoutes?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&stopNo="+stop.stopNo+"&format=json"
+            let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStopAllRoutes?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&stopNo="+String(describing: stop.stopNo)+"&format=json"
             
             let session = URLSession.shared
             
             //making a request to OC transpo API to get bus informations
             let apiTask = session.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) in
+                guard let data = data else { return }
+                do {
+                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
+                    print(jsonResponse)
+                    
+                    let result = try JSONDecoder().decode(APIResponseObject.self, from: data)
+                    print(result)
+                } catch let jsonError {
+                    print(jsonError)
+                }
                 
                 if error == nil{
                     
@@ -38,10 +48,8 @@ class DataService{
                     var time: String!
                     var bInfo: BusInfo!
                     
-                    guard let data = data else {return}
-                    
                     let jsonResponse = try! JSON(data: data)
-                
+                    
                     let routes = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].arrayValue
                     
                     if routes.isEmpty{ //single route stops
@@ -70,12 +78,12 @@ class DataService{
                     }
                     
                     //sort by ascending arrival time
-                    buses.sort(by: {(bus1, bus2) in
+                   /* buses.sort(by: {(bus1, bus2) in
                         if bus1.time == "-" || bus2.time == "-"{
                             return false
                         }
                         return Int(bus1.time)! < Int(bus2.time)!
-                    })
+                    })*/
                     
                     handler(buses)
                 } else {

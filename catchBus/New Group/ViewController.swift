@@ -25,7 +25,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var busesTable: UITableView!
     var busesData = [BusInfo]()
     var tableRefresher:UIRefreshControl = UIRefreshControl()
-    var stop = Stop(stopNo: "", stopName: "")
+    var stop = Stop(stopNo: 0, stopName: "")
     static var allStops = [Stop]()
 
     
@@ -69,97 +69,91 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-
-
-        self.present(self.loadingAlert, animated: true, completion:{
-            self.loadTableOrDisplayNoBusLabel()
-        })
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+4, execute: {
-            self.loadingAlert.dismiss(animated: true, completion: nil)
-        })
-    
-    }
-
-    
-    @IBAction func onRefreshTapped(_ sender: Any) {
-        present(self.loadingAlert, animated: true, completion: {
-            self.centerOnUserLocation()
-            self.locationManager.requestLocation()
-            self.userCoordinates = self.locationManager.location?.coordinate
-            self.loadTableOrDisplayNoBusLabel()
-        })
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+4, execute: {
-            self.loadingAlert.dismiss(animated: true, completion: nil)
-        })
-    }
-    
-    private func initAllStopsArray(){
-        let path = Bundle.main.url(forResource: "stops", withExtension: "json")
-        let data = try! Data(contentsOf: path!)
-        let json = JSON(data)
-        if !json["stops"].isEmpty{
-            for stop in json["stops"].arrayValue{
-                ViewController.allStops.append(Stop(stopNo: stop["stop_code"].stringValue, stopName: stop["stop_name"].stringValue))
-            }
-        } else {
-            print("error parsing stops.json ...")
-        }
-
-    }
-    
-
-
-    func loadTable(handler: @escaping (_ completed: Bool,_ closest: Stop)->()){
-
-        //first get closest stops' name45.415703,-75.668875
-        DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
-            self.closestStopCoordinates = DataService.instance.closestStopCoordinate
-            DataService.instance.getStopNumber(handler: { completed in
-                DataService.instance.getBusInfoAtStop(stops: DataService.instance.closestStops, handler: { data in
-                    let stop = DataService.instance.closestStops[0]
-                    if !data.isEmpty{
-                        self.busesData = data
-                        handler(true,stop)
-                    } else{
-                        handler(false,stop)
-                    }
-
-                })
-            })
-        })
-        
-        DataService.instance.reset()
-
-    }
-    
-    func loadTableOrDisplayNoBusLabel(){ // helper to refactor code and avoid to copy all the code over and over
-        
-        self.loadTable(handler: { completed, closestStop in
-            if completed{
-                DispatchQueue.main.async{
-                    //update stop name on
-                    self.stop = closestStop
-                    self.getDirectionToClosestStop(stopCoordinate: self.closestStopCoordinates, stopName: self.stop.stopName)
-                    self.busesTable.reloadData()
-                    
-                }
-            } else{
+        self.loadTable(handler: { completed in
+            if completed {
+               // DispatchQueue.main.async{
+                self.loadingAlert.dismiss(animated: true, completion: nil)
+               // }
+            }else{
                 DispatchQueue.main.async {
                     self.setupNoBusLabel()
                 }
             }
-            
+       })
+        
+        
+    }
+
+    
+    @IBAction func onRefreshTapped(_ sender: Any) {
+        self.centerOnUserLocation()
+        self.locationManager.requestLocation()
+        self.userCoordinates = self.locationManager.location?.coordinate
+        self.loadTable(handler: { completed in
+            if completed {
+                DispatchQueue.main.async{
+                    self.busesTable.reloadData()
+                    self.loadingAlert.dismiss(animated: true, completion: nil)
+                }
+            }else{
+                DispatchQueue.main.async {
+                    self.setupNoBusLabel()
+                }
+            }
         })
 
     }
     
+    private func initAllStopsArray(){
+        let path = Bundle.main.url(forResource: "stops", withExtension: "json")
+        guard let data = try? Data(contentsOf: path!) else {return}
+        
+        do {
+            ViewController.allStops = try! JSONDecoder().decode([Stop].self, from: data)
+        } catch {
+            print("Error decoding stops array => \(error)")
+        }
+    }
+
+    func loadTable(handler: @escaping (_ completed: Bool)->()){
+
+        //first get closest stops' name45.415703,-75.668875
+        self.present(self.loadingAlert, animated: true, completion:{
+            DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
+                self.closestStopCoordinates = DataService.instance.closestStopCoordinate
+                DataService.instance.getStopNumber(handler: { completed in
+                    DataService.instance.getBusInfoAtStop(stops: DataService.instance.closestStops, handler: { data in
+                        
+                        if !data.isEmpty{
+                            self.busesData = data
+                            let stop = DataService.instance.closestStops[0]
+                            self.stop = stop
+                            
+                            DispatchQueue.main.async {
+                                self.busesTable.reloadData()
+                                self.getDirectionToClosestStop(stopCoordinate: self.closestStopCoordinates, stopName: stop.stopName)
+                            }
+                        
+                            handler(true)
+                        } else{
+                            handler(false)
+                        }
+
+                    })
+                })
+            })
+        })
+        DataService.instance.reset()
+        
+    }
+    
     @objc func refreshTable(){
-        self.loadTable(handler: { complete, closest in
+        self.loadTable(handler: { complete in
             DispatchQueue.main.async {
                 self.busesTable.reloadData()
                 self.tableRefresher.endRefreshing()
+                self.loadingAlert.dismiss(animated: true, completion: nil)
+                
             }
         })
     }

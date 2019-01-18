@@ -1,5 +1,4 @@
-{
-    "stops": [{
+[{
             "stop_code": 8767,
             "stop_name": "SUSSEX / RIDEAU FALLS"
         },
@@ -22957,4 +22956,4 @@
             "stop_name": "CARP / DONALD B MUNRO"
         }
     ]
-}
+
