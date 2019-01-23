@@ -10,145 +10,81 @@ import Foundation
 import SwiftyJSON
 import CoreLocation
 
-class DataService{
+class DataService {
     static let instance = DataService()
     
-    /* function to get all buses infos around
-     */
-    private(set) var closestStopCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
-    private(set) var closestStopsName = ""
-    private(set) var closestStops = [Stop]()
+//    Error    Note
+//    1    Invalid API key
+//    2    Unable to query data source
+//    10    Invalid stop number
+//    11      Invalid route number
+//    12      Stop does not service route
     
+    // MARK: - Private
     
-    func getBusInfoAtStop(stops: [Stop], handler: @escaping (_ busInfo: [BusInfo]) -> ()){
-        var buses = [BusInfo]()
+    private(set) var stops: [Stop] = {
+        var stops = [Stop]()
         
-        for stop in stops{
-            let url = "https://api.octranspo1.com/v1.2/GetNextTripsForStopAllRoutes?appID=3afb3f7d&apiKey=2d67ca3957ddb9fe2c495dfa61657b1f&stopNo="+String(describing: stop.stopNo)+"&format=json"
-            
-            let session = URLSession.shared
-            
-            //making a request to OC transpo API to get bus informations
-            let apiTask = session.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) in
-                guard let data = data else { return }
-                do {
-                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
-                    print(jsonResponse)
-                    
-                    let result = try JSONDecoder().decode(APIResponseObject.self, from: data)
-                    print(result)
-                } catch let jsonError {
-                    print(jsonError)
-                }
-                
-                if error == nil{
-                    
-                    var routeNo: String!
-                    var routeHeading: String!
-                    var time: String!
-                    var bInfo: BusInfo!
-                    
-                    let jsonResponse = try! JSON(data: data)
-                    
-                    let routes = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].arrayValue
-                    
-                    if routes.isEmpty{ //single route stops
-                        let tmp = jsonResponse["GetRouteSummaryForStopResult"]["Routes"]["Route"].dictionaryValue
-                        
-                        if tmp["Trips"]?.dictionaryValue != nil{
-                            routeNo = tmp["RouteNo"]?.stringValue
-                            routeHeading = tmp["RouteHeading"]?.stringValue
-                            time = tmp["Trips"]!["Trip"][0]["AdjustedScheduleTime"].stringValue
-                            bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
-                            buses.append(bInfo)
-                        }
-                        
-                    } else { //multi routes stops
-                        for route in routes{
-                            
-                            if !route["Trips"].arrayValue.isEmpty{// if there is no bus trips for that route got to next
-                                routeNo = route["RouteNo"].stringValue
-                                routeHeading = route["RouteHeading"].stringValue
-                                time = route["Trips"][0]["AdjustedScheduleTime"].stringValue
-                                bInfo = BusInfo(no: routeNo, routeHeading: routeHeading, time: time)
-                                buses.append(bInfo)
-                            }
-                            
-                        }
-                    }
-                    
-                    //sort by ascending arrival time
-                   /* buses.sort(by: {(bus1, bus2) in
-                        if bus1.time == "-" || bus2.time == "-"{
-                            return false
-                        }
-                        return Int(bus1.time)! < Int(bus2.time)!
-                    })*/
-                    
-                    handler(buses)
-                } else {
-                    print(error.debugDescription)
-                }
-                
+        guard let path = Bundle.main.url(forResource: "stops", withExtension: "json"),
+            let data = try? Data(contentsOf: path) else { return stops }
+        
+        do {
+             stops = try JSONDecoder().decode([Stop].self, from: data)
+        } catch let decodingError{
+            print("Error decoding stops array => \(decodingError)")
+        }
+        return stops
+    }()
+    
+    private(set) var closestStopName: String = "" {
+        didSet {
+            self.closestStops = stops.filter({ stop in
+                return stop.name == closestStopName.uppercased()
             })
-            apiTask.resume() // end of API call
         }
     }
     
-    /*get stop number from json file
-     */
-    func getStopNumber(handler: @escaping (_ completed: Bool) -> ()){
+    private(set) var closestStops: [Stop] = []
+    
+    // MARK: - Public
+    
+    func getRoutes(at stops: [Stop], handler: @escaping (_ routes: [Route]) -> ()){
         
-        if !ViewController.allStops.isEmpty{
-            for stop in ViewController.allStops{
-                if stop.stopName == self.closestStopsName{
-                    self.closestStops.append(stop)
-                }
+        guard let stopCode = stops[0].code?.description else { return }
+        let urlString = "https://api.octranspo1.com/v1.2/GetNextTripsForStopAllRoutes?appID=e1ba2999&apiKey=fe581e66b42592e76c5bf1fd5d9ea646&stopNo=\(stopCode)&format=json"
+
+        let apiTask = URLSession.shared.dataTask(with: URL(string: urlString)!, completionHandler: { (data, response, error) in
+            
+            guard let data = data else { return }
+            
+            do {
+                let decodedObject = try JSONDecoder().decode(APIResponseObject.self, from: data)
+                handler(decodedObject.stopSummary.routes)
+            } catch let decodingError {
+                print(decodingError)
             }
-            handler(true)
-        } else{
-            print("error getting stop number: all stops array is empty !")
-            handler(false)
-        }
-        
-    }// end of getStopNumber
+        })
+        apiTask.resume()
+    }
     
-    
-    /* Function to get name of the stops near by a radius of 200
-     */
-    func getStopName(location: String, handler: @escaping (_ finished: Bool) -> ()){
+    func getClosestStopName(at location: String, handler: @escaping (_ finished: Bool) -> ()){
         
-        //let location = "45.414535,-75.671526"
         let API_KEY = "AIzaSyBmG3KTRGPdOgzuBqw_CUYlNbgLyV81xsM"
         let url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+location+"&radius=500&type=bus_station&key="+API_KEY
         
         URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) in
             
-            if error == nil{
-                let jsonResponse = JSON(data!)
-                //get closestbus stop
-                self.closestStopsName = jsonResponse["results"][0]["name"].stringValue.uppercased()
-                
-                //get closest stop gps coordinate
-                let lat = jsonResponse["results"][0]["geometry"]["location"]["lat"].doubleValue
-                let long = jsonResponse["results"][0]["geometry"]["location"]["lng"].doubleValue
-                self.closestStopCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+            guard error == nil, let data = data else { return }
+            
+            do {
+                let results = try JSONDecoder().decode(ClosestStopAPIResponse.self, from: data).results
+                guard let closestStopName = results.first?.name else { return }
+                self.closestStopName = closestStopName
                 handler(true)
-                
-            } else {
-                print(error.debugDescription)
+            } catch let decodingError {
+                print(decodingError)
                 handler(false)
             }
-            
-        }).resume()//end of api call
-    }//end of getStopName
-    
-    func reset(){
-        self.closestStopCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
-        self.closestStops = []
-        self.closestStopsName = ""
+        }).resume()
     }
-    
-    
-    
 }

@@ -7,20 +7,32 @@
 //
 
 import Foundation
+import CoreLocation
 
-struct Stop: Codable{ // change to a nsobject with a coordinate2d attribute
-    let stopNo: Int
-    let stopName: String
+struct ClosestStopAPIResponse: Decodable {
+    var status: String?
+    var results: [Stop]
+}
+
+struct Geometry: Decodable {
+    var locations: [String: Double]
+//    var latitude: Double
+//    var longitude: Double
     
-    enum CodingKeys: String, CodingKey {
-        case stopNo = "stop_code"
-        case stopName = "stop_name"
+    private enum CodingKeys: String, CodingKey {
+        case locations = "location"
     }
     
-    /*init(stopNo: String, stopName: String) {
-        self.stopNo = stopNo
-        self.stopName = stopName
-    }*/
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        locations = try container.decode([String: Double].self, forKey: .locations)
+    }
+}
+
+struct Stop: Decodable{
+    var geometry: Geometry?
+    var code: Int?
+    var name: String
 }
 
 

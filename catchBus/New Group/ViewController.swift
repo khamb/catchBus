@@ -10,216 +10,74 @@ import UIKit
 import MapKit
 import SwiftyJSON
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
+class ViewController: UIViewController {
  
+
+    @IBOutlet weak var centerMapOnUserLocationBtn: UIButton!
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var routesTableView: UITableView!
+    @IBOutlet weak var activityIndicatorView: UIView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
     var locationManager = CLLocationManager()
     let locationAuthorization = CLLocationManager.authorizationStatus()
     var userCoordinates: CLLocationCoordinate2D!
     var closestStopCoordinates: CLLocationCoordinate2D!
-    
-    let noBusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
-    let loadingAlert = UIAlertController(title: "Loading", message: nil, preferredStyle: .alert)
-    
-    @IBOutlet weak var centerMapOnUserLocationBtn: UIButton!
-    @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var busesTable: UITableView!
-    var busesData = [BusInfo]()
-    var tableRefresher:UIRefreshControl = UIRefreshControl()
-    var stop = Stop(stopNo: 0, stopName: "")
-    static var allStops = [Stop]()
-
+    var stop = Stop(geometry: nil, code: 0, name: "")
+    private var routes: [Route] = [Route]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //***customize navigation bar
-        navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon")) //title icon
+        navigationItem.titleView = UIImageView(image: UIImage(named: "busIcon"))
 
-        //end of customize navigation bar ***
         self.locationManager.delegate = self
         self.userCoordinates = self.locationManager.location?.coordinate
         
-        //init mapView
         self.configureMapView()
-        self.centerOnUserLocation()
-        self.centerMapOnUserLocationBtn.layer.cornerRadius = 0.5*self.centerMapOnUserLocationBtn.bounds.height
-        self.centerMapOnUserLocationBtn.layer.shadowOffset = CGSize(width: 0, height: 2)
-        self.centerMapOnUserLocationBtn.layer.shadowColor = UIColor.darkGray.cgColor
-        self.centerMapOnUserLocationBtn.layer.shadowOpacity = 0.5
         
-        // configure busesTable
-        self.busesTable.dataSource = self
-        self.busesTable.delegate = self
-        //register cell
-        self.busesTable.register(UINib(nibName: "busInfoCell", bundle: nil), forCellReuseIdentifier: "busInfoCellIdentifier")
-        
-        self.initTableRefresher()
-        
-        //populate stops array
-        self.initAllStopsArray()
+        routesTableView.dataSource = self
+        routesTableView.delegate = self
+        routesTableView.register(UINib(nibName: "RouteCell", bundle: nil), forCellReuseIdentifier: "RouteCell")
         
         
+        populateRoutesTableView()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        self.loadTable(handler: { completed in
-            if completed {
-               // DispatchQueue.main.async{
-                self.loadingAlert.dismiss(animated: true, completion: nil)
-               // }
-            }else{
-                DispatchQueue.main.async {
-                    self.setupNoBusLabel()
-                }
-            }
-       })
-        
-        
-    }
-
-    
-    @IBAction func onRefreshTapped(_ sender: Any) {
-        self.centerOnUserLocation()
-        self.locationManager.requestLocation()
-        self.userCoordinates = self.locationManager.location?.coordinate
-        self.loadTable(handler: { completed in
-            if completed {
-                DispatchQueue.main.async{
-                    self.busesTable.reloadData()
-                    self.loadingAlert.dismiss(animated: true, completion: nil)
-                }
-            }else{
-                DispatchQueue.main.async {
-                    self.setupNoBusLabel()
-                }
-            }
-        })
-
-    }
-    
-    private func initAllStopsArray(){
-        let path = Bundle.main.url(forResource: "stops", withExtension: "json")
-        guard let data = try? Data(contentsOf: path!) else {return}
-        
-        do {
-            ViewController.allStops = try! JSONDecoder().decode([Stop].self, from: data)
-        } catch {
-            print("Error decoding stops array => \(error)")
-        }
-    }
-
-    func loadTable(handler: @escaping (_ completed: Bool)->()){
-
+    private func populateRoutesTableView(){
         //first get closest stops' name45.415703,-75.668875
-        self.present(self.loadingAlert, animated: true, completion:{
-            DataService.instance.getStopName(location: self.userCoordinatesToString(), handler: { finished in
-                self.closestStopCoordinates = DataService.instance.closestStopCoordinate
-                DataService.instance.getStopNumber(handler: { completed in
-                    DataService.instance.getBusInfoAtStop(stops: DataService.instance.closestStops, handler: { data in
-                        
-                        if !data.isEmpty{
-                            self.busesData = data
-                            let stop = DataService.instance.closestStops[0]
-                            self.stop = stop
-                            
-                            DispatchQueue.main.async {
-                                self.busesTable.reloadData()
-                                self.getDirectionToClosestStop(stopCoordinate: self.closestStopCoordinates, stopName: stop.stopName)
-                            }
-                        
-                            handler(true)
-                        } else{
-                            handler(false)
-                        }
-
-                    })
-                })
-            })
-        })
-        DataService.instance.reset()
-        
-    }
-    
-    @objc func refreshTable(){
-        self.loadTable(handler: { complete in
-            DispatchQueue.main.async {
-                self.busesTable.reloadData()
-                self.tableRefresher.endRefreshing()
-                self.loadingAlert.dismiss(animated: true, completion: nil)
-                
-            }
-        })
-    }
-    
-    func setupNoBusLabel(){
-        self.noBusLabel.text = "❌ No bus Available at this stop right now❗️"
-        self.noBusLabel.textAlignment = .center
-        self.noBusLabel.center.x = self.busesTable.center.x
-        self.noBusLabel.center.y = self.busesTable.center.y-30
-        self.busesTable.backgroundView = self.noBusLabel
-    }
-    
-    func initTableRefresher(){
-        self.busesTable.refreshControl = self.tableRefresher
-        self.tableRefresher.addTarget(self, action: #selector(ViewController.self.refreshTable), for: UIControlEvents.valueChanged)
-        self.tableRefresher.attributedTitle = NSAttributedString(string: "updating bus information ...")
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self.stop.stopName
-    }
-    
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.busesData.isEmpty{
-            tableView.backgroundView?.isHidden = false
-        }else{
-            tableView.backgroundView?.isHidden = true
-        }
-        return self.busesData.count
-    }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let favorite = UIContextualAction(style: .normal, title: "") { (action, view, completed) in
-            let favBus = FavBusInfo(busInfo: self.busesData[indexPath.row], stop: self.stop)
+        activityIndicator.startAnimating()
+        DataService.instance.getClosestStopName(at: "45.415703,-75.668875") { completed in
+            guard completed else { return }
             
-            if FavouriteBuses.instance.addToFavourites(favBus: favBus){
-                let alert = UIAlertController(title: "✅", message: "SUCCESS!", preferredStyle: .alert)
-                self.present(alert, animated: true, completion:{
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.75, execute: {
-                        alert.dismiss(animated: true, completion: nil)
-                    })
-                })
-                completed(true)
-            } else {
-                let alert = UIAlertController(title: "❌", message: "ALREADY IN YOUR FAVOURITES!", preferredStyle: .alert)
-                self.present(alert, animated: true, completion:{
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.75, execute: {
-                        alert.dismiss(animated: true, completion: nil)
-                    })
-                })
-
-                completed(true)
-            }
+            DataService.instance.getRoutes(at: DataService.instance.closestStops, handler: { routes in
+                self.routes = routes
+                DispatchQueue.main.async {
+                    self.routesTableView.reloadData()
+                    self.activityIndicator.stopAnimating()
+                    self.activityIndicatorView.isHidden = true
+                }
+            })
         }
-        favorite.image = UIImage(named: "fav")
-        return UISwipeActionsConfiguration(actions: [favorite])
+    }
+
+}
+
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return DataService.instance.closestStopName
+    }
+    
+}
+
+extension ViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return routes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = Bundle.main.loadNibNamed("busInfoCell", owner: self, options: nil)?.first as? busInfoCell else {return UITableViewCell()}
-        cell.initRow(busInfo: self.busesData[indexPath.row])
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "RouteCell", for: indexPath) as? RouteCell else { return UITableViewCell() }
+        cell.update(route: routes[indexPath.row])
         return cell
     }
 }
@@ -250,7 +108,7 @@ extension ViewController: CLLocationManagerDelegate{
     }
 }
 
-extension ViewController: MKMapViewDelegate{
+extension ViewController: MKMapViewDelegate {
     
     func configureMapView(){
         self.mapView.delegate = self
@@ -266,14 +124,6 @@ extension ViewController: MKMapViewDelegate{
         }
     }
     
-    /*
-     show direction to stop
-     
-     create direction request DR
-     choose DR source (mkplacemark)
-     choose DR destination
-     get direction mkdirection
-     */
     func getDirectionToClosestStop(stopCoordinate: CLLocationCoordinate2D, stopName: String){
         self.removeAllAnnotationsAndOvarlays()
         

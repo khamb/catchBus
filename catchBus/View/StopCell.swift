@@ -11,21 +11,11 @@ import UIKit
 class StopCell: UITableViewCell {
 
     @IBOutlet weak var stopLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+
     
     func initCell(stop: Stop){
-        let text = stop.stopName.lowercased().capitalized
-        self.stopLabel.text = text
+        self.stopLabel.text = stop.name.lowercased().capitalized
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
 
 }

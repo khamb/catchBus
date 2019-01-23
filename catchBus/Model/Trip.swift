@@ -18,6 +18,5 @@ struct Trip: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         adjustedScheduleTime = try container.decode(String.self, forKey: .adjustedScheduleTime)
-        print(adjustedScheduleTime)
     }
 }
